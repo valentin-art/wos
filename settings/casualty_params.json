@@ -1,0 +1,9 @@
+{
+  "intercept": -2.736897788703822,
+  "pressure_coef": 1.0056726279317532,
+  "counter_pressure_coef": 0.38502674061958875,
+  "size_ratio_coef": 1.019794866021783,
+  "opp_inf_coef": -0.9112209637393486,
+  "opp_spr_coef": 0.4176049356430851,
+  "wounded_share": 0.35
+}
