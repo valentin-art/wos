@@ -5,15 +5,14 @@ import json
 import numpy as np
 import pandas as pd
 import streamlit as st
+import boto3
 
 sys.path.insert(0, os.path.dirname(__file__))
 
 from src.io.io import load_battles_from_json
 from src.optimizers.battle_model import (
     compute_margin,
-    fit_model,
     predict_p_win,
-    summarize_params,
     unpack,
 )
 from src.optimizers.casualty_model import (
@@ -24,7 +23,6 @@ from src.struct.battle import ArmyBonuses, Battle, Hero, Side, TroopComposition
 
 # ── Constants ────────────────────────────────────────────────────────────────
 
-HERO_NAMES = ["None", "Alonso", "Flint", "Geronimo", "Greg", "Jessy", "Jina", "Logan", "Mia"]
 BONUS_FIELDS = [
     ("inf_atk", "Infantry ATK"),
     ("inf_def", "Infantry DEF"),
@@ -42,6 +40,28 @@ BONUS_FIELDS = [
 DEFAULT_BONUS_PCT = 1000  # shown as %, stored as /100 internally
 
 
+# ── Cloudflare R2 sync ───────────────────────────────────────────────────────
+
+
+def _sync_from_r2() -> None:
+    r2 = st.secrets["r2"]
+    s3 = boto3.client(
+        "s3",
+        endpoint_url=f"https://{r2['account_id']}.r2.cloudflarestorage.com",
+        aws_access_key_id=r2["access_key_id"],
+        aws_secret_access_key=r2["secret_access_key"],
+        region_name="auto",
+    )
+    bucket = r2["bucket"]
+    paginator = s3.get_paginator("list_objects_v2")
+    for page in paginator.paginate(Bucket=bucket):
+        for obj in page.get("Contents", []):
+            key = obj["Key"]
+            local_path = os.path.join(".", key)
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
+            s3.download_file(bucket, key, local_path)
+
+
 # ── Model fitting (cached) ───────────────────────────────────────────────────
 
 
@@ -49,6 +69,13 @@ DEFAULT_BONUS_PCT = 1000  # shown as %, stored as /100 internally
 def load_model():
     import contextlib
     import io
+
+    try:
+        has_r2 = "r2" in st.secrets
+    except Exception:
+        has_r2 = False
+    if has_r2:
+        _sync_from_r2()
 
     with contextlib.redirect_stdout(io.StringIO()):
         battles = load_battles_from_json("./data")
@@ -59,7 +86,10 @@ def load_model():
 
     cas_params = load_casualty_params("./settings/casualty_params.json")
 
-    return params, hero_index, battles, cas_params
+    with open("./settings/hero_roles.json", "r", encoding="utf-8") as f:
+        hero_roles = json.load(f)
+
+    return params, hero_index, battles, cas_params, hero_roles
 
 
 # ── Helper: build Side from UI inputs ────────────────────────────────────────
@@ -91,7 +121,6 @@ def build_side(
         n_mark = total * mark_ratio / ratio_sum
         N = total
 
-    # bonuses_pct values are percentages, convert to multiplier
     b = {k: v / 100.0 for k, v in bonuses_pct.items()}
 
     heroes = []
@@ -124,15 +153,15 @@ def build_side(
 # ── Side input panel ─────────────────────────────────────────────────────────
 
 
-def side_panel(label: str, color: str) -> tuple:
+def side_panel(label: str, color: str, heroes_by_role: dict) -> tuple:
     st.markdown(f"### :{color}[{label} side]")
 
-    # Heroes
+    # Heroes — one slot per role, choices restricted to calibrated heroes of that role
     st.markdown("**Heroes**")
     hcols = st.columns(3)
-    hero1 = hcols[0].selectbox("Hero 1", HERO_NAMES, key=f"{label}_h1")
-    hero2 = hcols[1].selectbox("Hero 2", HERO_NAMES, key=f"{label}_h2")
-    hero3 = hcols[2].selectbox("Hero 3", HERO_NAMES, key=f"{label}_h3")
+    hero1 = hcols[0].selectbox("Infantry hero", heroes_by_role["infantry"], key=f"{label}_h1")
+    hero2 = hcols[1].selectbox("Lancer hero",   heroes_by_role["lancer"],   key=f"{label}_h2")
+    hero3 = hcols[2].selectbox("Marksman hero", heroes_by_role["marksman"], key=f"{label}_h3")
 
     # Troops
     st.markdown("**Troops**")
@@ -159,15 +188,9 @@ def side_panel(label: str, color: str) -> tuple:
         )
         rcols = st.columns(3)
         inf_r = float(rcols[0].number_input("Infantry %", min_value=0.0, max_value=100.0, value=33.0, step=1.0, format="%.1f", key=f"{label}_infr"))
-        lanc_r = float(rcols[1].number_input("Lancers %", min_value=0.0, max_value=100.0, value=33.0, step=1.0, format="%.1f", key=f"{label}_lancr"))
-        mark_r = float(rcols[2].number_input("Marksman %", min_value=0.0, max_value=100.0, value=34.0, step=1.0, format="%.1f", key=f"{label}_markr"))
-        rs = inf_r + lanc_r + mark_r
-        if rs > 0:
-            st.caption(
-                f"Effective split — Infantry: {100*inf_r/rs:.1f}%  "
-                f"Lancers: {100*lanc_r/rs:.1f}%  "
-                f"Marksman: {100*mark_r/rs:.1f}%"
-            )
+        lanc_r = float(rcols[1].number_input("Lancers %", min_value=0.0, max_value=100.0 - inf_r, value=min(33.0, 100.0 - inf_r), step=1.0, format="%.1f", key=f"{label}_lancr"))
+        mark_r = 100.0 - inf_r - lanc_r
+        rcols[2].metric("Marksman %", f"{mark_r:.1f}")
 
     # Bonuses
     with st.expander("Battle bonuses (% bonus, e.g. 1000 = ×10)", expanded=False):
@@ -196,7 +219,7 @@ def side_panel(label: str, color: str) -> tuple:
 # ── Model parameter display ───────────────────────────────────────────────────
 
 
-def show_model_params(params: np.ndarray, hero_index: dict) -> None:
+def show_model_params(params: np.ndarray, hero_index: dict, cas_params) -> None:
     p = unpack(params, len(hero_index))
     idx_to_name = {v: k for k, v in hero_index.items()}
 
@@ -251,6 +274,57 @@ def show_model_params(params: np.ndarray, hero_index: dict) -> None:
     )
     st.dataframe(hero_df, use_container_width=True, hide_index=True)
 
+    st.divider()
+    st.subheader("Casualty model")
+    st.markdown(
+        "OLS on non-censored (winning) sides. Losing sides are predicted at 100% casualties.  "
+        "Structural parameters (δ, α, β, w, hero β) are fixed from the win model."
+    )
+    cas_df = pd.DataFrame(
+        [
+            {
+                "Parameter": "a (intercept)",
+                "Value": f"{cas_params.intercept:.4f}",
+                "Interpretation": "logit-scale baseline when all log-predictors = 0",
+            },
+            {
+                "Parameter": "b (log-pressure)",
+                "Value": f"{cas_params.pressure_coef:.4f}",
+                "Interpretation": "pressure = OFF_opponent / DEF_self — primary damage signal",
+            },
+            {
+                "Parameter": "c (log-counter-pressure)",
+                "Value": f"{cas_params.counter_pressure_coef:.4f}",
+                "Interpretation": "counter_pressure = DEF_opponent / OFF_self — opponent resistance",
+            },
+            {
+                "Parameter": "d (log-size-ratio)",
+                "Value": f"{cas_params.size_ratio_coef:.4f}",
+                "Interpretation": "size_ratio = N_opponent / N_self — head-count disadvantage",
+            },
+            {
+                "Parameter": "e (opp infantry share)",
+                "Value": f"{cas_params.opp_inf_coef:.4f}",
+                "Interpretation": "infantry-heavy opponents cause fewer casualties vs archer baseline",
+            },
+            {
+                "Parameter": "f (opp spearman share)",
+                "Value": f"{cas_params.opp_spr_coef:.4f}",
+                "Interpretation": "spearman-heavy opponents cause more casualties vs archer baseline",
+            },
+            {
+                "Parameter": "wounded share",
+                "Value": f"{cas_params.wounded_share:.2f}",
+                "Interpretation": "fixed game constant: 35% of casualties go to hospital",
+            },
+        ]
+    )
+    st.dataframe(cas_df, use_container_width=True, hide_index=True)
+    st.markdown(
+        "**Model:** `logit(cas_rate) = a + b·log(pressure) + c·log(counter_pressure)"
+        " + d·log(size_ratio) + e·opp_inf + f·opp_spr`"
+    )
+
 
 # ── Main app ─────────────────────────────────────────────────────────────────
 
@@ -259,7 +333,15 @@ def main():
     st.set_page_config(page_title="WOS Battle Dashboard", layout="wide")
     st.title("Whiteout Survival — Battle Outcome Dashboard")
 
-    params, hero_index, battles, cas_params = load_model()
+    params, hero_index, battles, cas_params, hero_roles = load_model()
+
+    heroes_by_role = {
+        role: ["None"] + sorted(
+            name for name, r in hero_roles.items()
+            if r == role and name in hero_index
+        )
+        for role in ("infantry", "lancer", "marksman")
+    }
 
     tab_sim, tab_params = st.tabs(["Battle Simulator", "Model Parameters"])
 
@@ -271,14 +353,14 @@ def main():
                 mode_b, inf_b, lanc_b, mark_b,
                 total_b, inf_rb, lanc_rb, mark_rb,
                 bonuses_b, h1_b, h2_b, h3_b,
-            ) = side_panel("Blue", "blue")
+            ) = side_panel("Blue", "blue", heroes_by_role)
 
         with col_red:
             (
                 mode_r, inf_r, lanc_r, mark_r,
                 total_r, inf_rr, lanc_rr, mark_rr,
                 bonuses_r, h1_r, h2_r, h3_r,
-            ) = side_panel("Red", "red")
+            ) = side_panel("Red", "red", heroes_by_role)
 
         st.divider()
 
@@ -303,8 +385,9 @@ def main():
         try:
             p_win = predict_p_win(dummy_battle, params, hero_index)
             margin = compute_margin(dummy_battle, params, hero_index)
-            cas_blue = predict_casualties(blue_side, red_side, params, hero_index, cas_params)
-            cas_red = predict_casualties(red_side, blue_side, params, hero_index, cas_params)
+            blue_wins = margin >= 0
+            cas_blue = predict_casualties(blue_side, red_side, params, hero_index, cas_params, won=blue_wins)
+            cas_red = predict_casualties(red_side, blue_side, params, hero_index, cas_params, won=not blue_wins)
 
             st.subheader("Predicted outcome")
 
@@ -364,38 +447,7 @@ def main():
             st.error(f"Prediction failed: {exc}")
 
     with tab_params:
-        show_model_params(params, hero_index)
-        st.divider()
-        st.subheader("Casualty model")
-        st.markdown(
-            "Fitted independently on non-censored battles (survivors > 0).  "
-            "Uses the same OFF/DEF scores as the win model — no new structural parameters."
-        )
-        cas_struct_df = pd.DataFrame(
-            [
-                {
-                    "Parameter": "a (intercept)",
-                    "Value": f"{cas_params.intercept:.4f}",
-                    "Interpretation": "logit-scale baseline casualty rate when log(pressure) = 0",
-                },
-                {
-                    "Parameter": "b (pressure coefficient)",
-                    "Value": f"{cas_params.pressure_coef:.4f}",
-                    "Interpretation": "logit(cas_rate) rises by b for each unit increase in log(pressure)",
-                },
-                {
-                    "Parameter": "wounded share",
-                    "Value": f"{cas_params.wounded_share:.2f}",
-                    "Interpretation": "fixed game constant: 35% of casualties go to hospital, 65% lightly wounded",
-                },
-            ]
-        )
-        st.dataframe(cas_struct_df, use_container_width=True, hide_index=True)
-        st.markdown(
-            "**Model:** `logit(cas_rate) = a + b · log(pressure)`,  "
-            "where `pressure = OFF_opponent / DEF_self`  ·  "
-            "R² = 0.81 on 30 non-censored observations"
-        )
+        show_model_params(params, hero_index, cas_params)
 
 
 if __name__ == "__main__":
