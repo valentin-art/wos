@@ -15,8 +15,8 @@ from src.optimizers.charms import upgrade_charms
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Equipment slots, in tie-break priority order (Coat > Pants > ... > Watch).
-GEAR_NAMES = ["Coat", "Pants", "Ring", "Staff", "Hat", "Watch"]
+# Equipment slots, in tie-break priority order (Jacket > Pants > ... > Watch).
+GEAR_NAMES = ["Jacket", "Pants", "Ring", "Cane", "Helmet", "Watch"]
 N_CHARMS = 3  # charms per equipment type
 
 DEFAULT_GEAR_RESOURCES = {"Alloy": 214760, "Polish": 2587, "Plans": 605, "Amber": 0}
