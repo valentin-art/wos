@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌹 Rose Chest Calculator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0d0d1a;
+    --surface:  #12122a;
+    --surface2: #1a1a2e;
+    --border:   #2a2a40;
+    --text:     #e0e0e0;
+    --muted:    #888;
+    --green:    #6fcf97;
+    --red:      #ff6b6b;
+    --yellow:   #ffd93d;
+    --blue:     #74b9ff;
+    --purple:   #a29bfe;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Layout ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .main {
+    padding: 32px 40px;
+    max-width: 1100px;
+  }
+
+  /* ── Typography ── */
+  h1 { font-size: 26px; font-family: Georgia, serif; color: #fff; margin-bottom: 4px; }
+  h2 { font-size: 16px; font-family: Georgia, serif; color: var(--text); margin: 28px 0 12px; }
+  h3 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase;
+       letter-spacing: 1px; margin-bottom: 10px; }
+  .caption { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+
+  /* ── Sidebar sections ── */
+  .sidebar-section { margin-bottom: 20px; }
+  .sidebar-section summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sidebar-section summary::after { content: "▾"; font-size: 10px; }
+  .sidebar-section[open] summary::after { content: "▴"; }
+  .sidebar-section .inner { padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+  /* ── Form controls ── */
+  label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 3px; }
+
+  input[type="number"], input[type="text"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 6px 10px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  input[type="number"]:focus, input[type="text"]:focus {
+    border-color: var(--green);
+  }
+
+  .info-badge {
+    background: #0d1f0d;
+    border: 1px solid #2a5c2a;
+    border-radius: 6px;
+    color: var(--green);
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity .15s;
+  }
+  .btn-primary:hover { opacity: .88; }
+  .btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+
+  .btn-sm {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--muted);
+    padding: 3px 9px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .btn-sm:hover { color: var(--text); }
+  .btn-sm.danger:hover { color: var(--red); border-color: var(--red); }
+
+  /* ── Tables ── */
+  .dist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  .dist-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .dist-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .dist-card-title { font-weight: 600; font-size: 13px; }
+
+  .editable-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .editable-table th {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 4px 6px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .editable-table td { padding: 3px 4px; }
+  .editable-table td input {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--text);
+    padding: 3px 5px;
+    width: 100%;
+    font-size: 13px;
+    font-family: monospace;
+  }
+  .editable-table td input:focus {
+    background: var(--surface2);
+    border-color: var(--border);
+    outline: none;
+  }
+  .editable-table td.del-col { width: 28px; text-align: center; }
+  .del-row-btn {
+    background: none;
+    border: none;
+    color: var(--border);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .del-row-btn:hover { color: var(--red); }
+
+  .dist-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .dist-stat {
+    flex: 1;
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 6px 8px;
+  }
+  .dist-stat-label { color: var(--muted); font-size: 11px; }
+  .dist-stat-value { color: var(--green); font-family: monospace; font-weight: 600; }
+  .dist-stat-value.warn { color: var(--red); }
+
+  /* ── Progress ── */
+  .progress-wrap { margin: 16px 0; display: none; }
+  .progress-wrap.visible { display: block; }
+  .progress-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .progress-bar-bg {
+    background: var(--surface2);
+    border-radius: 99px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--green);
+    height: 100%;
+    border-radius: 99px;
+    transition: width .2s;
+    width: 0%;
+  }
+
+  /* ── Winner card ── */
+  .winner-card {
+    background: linear-gradient(135deg, #0d1f0d 0%, #12122a 100%);
+    border: 1.5px solid var(--green);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .winner-eyebrow {
+    color: var(--green);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .winner-name { font-size: 28px; font-weight: 700; font-family: Georgia, serif; }
+  .winner-pct {
+    font-size: 52px;
+    font-weight: 700;
+    font-family: monospace;
+    margin: 8px 0 4px;
+  }
+  .winner-sub { color: var(--muted); font-size: 13px; }
+
+  /* ── Comparison table ── */
+  .results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .results-table th {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .results-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  .results-table tr.winner-row td { background: #0d1f0d; color: var(--green); font-weight: 600; }
+  .results-table tr:last-child td { border-bottom: none; }
+
+  /* ── Tabs ── */
+  .tabs { margin-top: 28px; }
+  .tab-buttons { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 14px;
+    margin-bottom: -1px;
+    transition: color .15s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--text); border-bottom-color: var(--green); }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ── Metrics row ── */
+  .metrics-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .metric-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    min-width: 110px;
+  }
+  .metric-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  .metric-value { color: var(--green); font-size: 20px; font-weight: 700; font-family: monospace; margin-top: 2px; }
+
+  /* ── Percentile row ── */
+  .pct-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .pct-box {
+    background: var(--surface2);
+    border-radius: 7px;
+    padding: 8px 12px;
+    min-width: 68px;
+    text-align: center;
+  }
+  .pct-label { color: var(--muted); font-size: 11px; }
+  .pct-value { color: var(--text); font-size: 15px; font-weight: 600; font-family: monospace; }
+
+  /* ── Milestone metrics ── */
+  .milestone-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+  .milestone-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    min-width: 100px;
+    text-align: center;
+  }
+  .milestone-label { color: var(--muted); font-size: 11px; }
+  .milestone-rate { color: var(--green); font-size: 18px; font-weight: 700; font-family: monospace; }
+  .milestone-delta { color: #4caf50; font-size: 11px; margin-top: 2px; }
+
+  /* ── Canvas ── */
+  .chart-wrap { position: relative; height: 220px; margin-bottom: 20px; }
+
+  /* ── Details expander ── */
+  .expander {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+  .expander summary {
+    cursor: pointer;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+  }
+  .expander summary::after { content: "▾"; color: var(--muted); }
+  .expander[open] summary::after { content: "▴"; }
+  .expander-body { padding: 0 16px 16px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+  .expander-body strong { color: var(--text); }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  /* ── Success banner ── */
+  .success-banner {
+    background: #0d1f0d;
+    border: 1px solid #2a5c2a;
+    border-radius: 8px;
+    color: var(--green);
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  /* ── Placeholder ── */
+  .placeholder {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 24px;
+  }
+
+  /* ── Section card ── */
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* ── Milestones editor ── */
+  .milestones-wrap { max-width: 420px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; }
+    .main { padding: 20px 16px; }
+    .dist-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <h3 style="margin-bottom:20px">⚙️ Parameters</h3>
+
+    <details class="sidebar-section" open>
+      <summary>Chest spawn probabilities</summary>
+      <div class="inner">
+        <div>
+          <label>P(red)</label>
+          <input type="number" id="pRed" value="0.085" min="0" max="1" step="0.001">
+        </div>
+        <div>
+          <label>P(yellow)</label>
+          <input type="number" id="pYellow" value="0.24" min="0" max="1" step="0.001">
+        </div>
+        <div id="pGrayBadge" class="info-badge">P(gray) auto: 0.6750</div>
+        <div>
+          <label>Chests per set (n)</label>
+          <input type="number" id="nChests" value="9" min="1" max="25" step="1">
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Costs &amp; budget</summary>
+      <div class="inner">
+        <div>
+          <label>Open cost</label>
+          <input type="number" id="costOpen" value="60" min="0" step="1">
+        </div>
+        <div>
+          <label>Refresh cost</label>
+          <input type="number" id="costRefresh" value="90" min="0" step="1">
+        </div>
+        <div>
+          <label>Budget</label>
+          <input type="number" id="budget" value="4000" min="0" step="10">
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Game structure</summary>
+      <div class="inner">
+        <div>
+          <label>Days</label>
+          <input type="number" id="days" value="4" min="1" max="30" step="1">
+        </div>
+        <div>
+          <label>Free refreshes / day</label>
+          <input type="number" id="freePerDay" value="3" min="0" max="50" step="1">
+        </div>
+        <div id="totalFreesBadge" class="info-badge">Total free refreshes: 12</div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Simulation</summary>
+      <div class="inner">
+        <div>
+          <label>Runs per strategy</label>
+          <input type="number" id="nRuns" value="5000" min="100" max="50000" step="500">
+        </div>
+        <div>
+          <label>Rose threshold (&gt;)</label>
+          <input type="number" id="threshold" value="300" min="0" step="10">
+        </div>
+        <div>
+          <label>Histogram step</label>
+          <input type="number" id="histStep" value="50" min="1" step="5">
+        </div>
+        <div>
+          <label>Random seed (0 = random)</label>
+          <input type="number" id="seed" value="0" min="0" step="1">
+        </div>
+      </div>
+    </details>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────────────────────────── -->
+  <main class="main">
+    <h1>🌹 Rose Chest Calculator</h1>
+    <p class="caption" id="mainCaption">Monte Carlo · 4 days · 3 free refreshes/day · All 4 strategies simulated</p>
+
+    <!-- Distribution editors -->
+    <h2>Rose distributions per chest type</h2>
+    <div class="dist-grid">
+      <div class="dist-card" id="card-red">
+        <div class="dist-card-header">
+          <span class="dist-card-title">🔴 Red</span>
+          <button class="btn-sm" onclick="addRow('red')">+ row</button>
+        </div>
+        <table class="editable-table" id="table-red">
+          <thead><tr><th>Roses</th><th>Probability</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="dist-stats">
+          <div class="dist-stat">
+            <div class="dist-stat-label">E(roses)</div>
+            <div class="dist-stat-value" id="ev-red">—</div>
+          </div>
+          <div class="dist-stat">
+            <div class="dist-stat-label">Σ probs</div>
+            <div class="dist-stat-value" id="sum-red">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dist-card" id="card-yellow">
+        <div class="dist-card-header">
+          <span class="dist-card-title">🟡 Yellow</span>
+          <button class="btn-sm" onclick="addRow('yellow')">+ row</button>
+        </div>
+        <table class="editable-table" id="table-yellow">
+          <thead><tr><th>Roses</th><th>Probability</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="dist-stats">
+          <div class="dist-stat">
+            <div class="dist-stat-label">E(roses)</div>
+            <div class="dist-stat-value" id="ev-yellow">—</div>
+          </div>
+          <div class="dist-stat">
+            <div class="dist-stat-label">Σ probs</div>
+            <div class="dist-stat-value" id="sum-yellow">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dist-card" id="card-gray">
+        <div class="dist-card-header">
+          <span class="dist-card-title">⬜ Gray</span>
+          <button class="btn-sm" onclick="addRow('gray')">+ row</button>
+        </div>
+        <table class="editable-table" id="table-gray">
+          <thead><tr><th>Roses</th><th>Probability</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="dist-stats">
+          <div class="dist-stat">
+            <div class="dist-stat-label">E(roses)</div>
+            <div class="dist-stat-value" id="ev-gray">—</div>
+          </div>
+          <div class="dist-stat">
+            <div class="dist-stat-label">Σ probs</div>
+            <div class="dist-stat-value" id="sum-gray">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Milestone editor -->
+    <h2>🏆 Milestone rewards</h2>
+    <p class="caption">Cumulative rewards earned when total chest opens reach each threshold.</p>
+    <div class="section-card milestones-wrap">
+      <table class="editable-table" id="table-milestones">
+        <thead><tr><th>Total opens</th><th>Reward (roses)</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div style="margin-top:10px">
+        <button class="btn-sm" onclick="addMilestone()">+ row</button>
+      </div>
+    </div>
+
+    <!-- Logic explanation -->
+    <details class="expander">
+      <summary>ℹ️ Simulation logic</summary>
+      <div class="expander-body" id="logicText"></div>
+    </details>
+
+    <!-- Run button -->
+    <button class="btn-primary" id="runBtn" onclick="runSimulation()">▶ Run all strategies</button>
+
+    <!-- Progress -->
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-label" id="progressLabel">Running…</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    </div>
+
+    <!-- Results -->
+    <div id="results"></div>
+  </main>
+</div>
+
+<script>
+// ── Seeded PRNG (mulberry32) ───────────────────────────────────────────────
+function makePRNG(seed) {
+  let s = seed >>> 0;
+  return function () {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function randomSeed() {
+  return (Math.random() * 0xFFFFFFFF) >>> 0;
+}
+
+// ── Default data ──────────────────────────────────────────────────────────
+const DEFAULTS = {
+  red:    [{roses: 100, prob: 0.02}, {roses: 50, prob: 0.06}, {roses: 20, prob: 0.42}, {roses: 0, prob: 0.50}],
+  yellow: [{roses: 100, prob: 0.005}, {roses: 20, prob: 0.06}, {roses: 6, prob: 0.42}, {roses: 0, prob: 0.515}],
+  gray:   [{roses: 100, prob: 0.003}, {roses: 6, prob: 0.107}, {roses: 3, prob: 0.405}, {roses: 0, prob: 0.485}],
+  milestones: [{opens: 20, reward: 30}, {opens: 50, reward: 50}, {opens: 100, reward: 200},
+               {opens: 150, reward: 100}, {opens: 300, reward: 200}, {opens: 500, reward: 500}],
+};
+
+const STRATEGIES = [
+  {id: 1, name: "S1 — Red only",        desc: "Open red chests if any; otherwise refresh",         color: "#ff6b6b"},
+  {id: 2, name: "S2 — Red + Yellow",    desc: "Open red & yellow if any; otherwise refresh",       color: "#ffd93d"},
+  {id: 3, name: "S3 — Open all",        desc: "Open all chests every time",                        color: "#74b9ff"},
+  {id: 4, name: "S4 — Hybrid (≥6→all)", desc: "≥6 valuable → open all; otherwise red only",       color: "#a29bfe"},
+];
+
+// ── Editable table helpers ────────────────────────────────────────────────
+function makeRow(tbody, cells, onDelete) {
+  const tr = document.createElement('tr');
+  cells.forEach(({value, step, placeholder}) => {
+    const td = document.createElement('td');
+    const inp = document.createElement('input');
+    inp.type = 'number';
+    inp.value = value ?? '';
+    inp.step = step ?? 1;
+    if (placeholder) inp.placeholder = placeholder;
+    inp.addEventListener('input', updateDistStats);
+    td.appendChild(inp);
+    tr.appendChild(td);
+  });
+  const delTd = document.createElement('td');
+  delTd.className = 'del-col';
+  const delBtn = document.createElement('button');
+  delBtn.className = 'del-row-btn';
+  delBtn.textContent = '×';
+  delBtn.addEventListener('click', () => { tr.remove(); updateDistStats(); });
+  delTd.appendChild(delBtn);
+  tr.appendChild(delTd);
+  tbody.appendChild(tr);
+}
+
+function populateTable(id, rows, isRoses) {
+  const tbody = document.querySelector(`#table-${id} tbody`);
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const cells = isRoses
+      ? [{value: r.roses, step: 1}, {value: r.prob, step: 0.001}]
+      : [{value: r.opens, step: 1}, {value: r.reward, step: 1}];
+    makeRow(tbody, cells);
+  });
+}
+
+function addRow(id) {
+  const tbody = document.querySelector(`#table-${id} tbody`);
+  makeRow(tbody, [{value: '', step: 1}, {value: '', step: 0.001}]);
+}
+
+function addMilestone() {
+  const tbody = document.querySelector('#table-milestones tbody');
+  makeRow(tbody, [{value: '', step: 1}, {value: '', step: 1}]);
+}
+
+function readTable(id, col0, col1) {
+  const rows = [];
+  document.querySelectorAll(`#table-${id} tbody tr`).forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    const v0 = parseFloat(inputs[0].value);
+    const v1 = parseFloat(inputs[1].value);
+    if (!isNaN(v0) && !isNaN(v1)) rows.push({[col0]: v0, [col1]: v1});
+  });
+  return rows;
+}
+
+function updateDistStats() {
+  ['red', 'yellow', 'gray'].forEach(id => {
+    const rows = readTable(id, 'roses', 'prob');
+    const ev = rows.reduce((acc, r) => acc + r.roses * r.prob, 0);
+    const sum = rows.reduce((acc, r) => acc + r.prob, 0);
+    document.getElementById(`ev-${id}`).textContent = ev.toFixed(3);
+    const sumEl = document.getElementById(`sum-${id}`);
+    sumEl.textContent = sum.toFixed(3);
+    sumEl.className = 'dist-stat-value' + (Math.abs(sum - 1) > 0.001 ? ' warn' : '');
+  });
+}
+
+// ── Sidebar reactive updates ──────────────────────────────────────────────
+function updateSidebarLabels() {
+  const pRed = parseFloat(document.getElementById('pRed').value) || 0;
+  const pYellow = parseFloat(document.getElementById('pYellow').value) || 0;
+  const pGray = Math.max(0, 1 - pRed - pYellow);
+  document.getElementById('pGrayBadge').textContent = `P(gray) auto: ${pGray.toFixed(4)}`;
+
+  const days = parseInt(document.getElementById('days').value) || 0;
+  const free = parseInt(document.getElementById('freePerDay').value) || 0;
+  document.getElementById('totalFreesBadge').textContent = `Total free refreshes: ${days * free}`;
+
+  const caption = `Monte Carlo · ${days} day${days !== 1 ? 's' : ''} · ${free} free refreshes/day · All 4 strategies simulated`;
+  document.getElementById('mainCaption').textContent = caption;
+  updateLogicText();
+}
+
+function updateLogicText() {
+  const days = parseInt(document.getElementById('days').value) || 4;
+  const free = parseInt(document.getElementById('freePerDay').value) || 3;
+  document.getElementById('logicText').innerHTML = `
+    <strong>Optimal play strategy used for every strategy variant:</strong><br><br>
+    • <strong>Days 1 to ${days - 1}:</strong> only free refreshes are used.
+      Once the ${free} free refreshes per day are exhausted, the day ends — no paid refreshes happen.<br>
+    • <strong>Day ${days} (last day):</strong> free refreshes first, then paid refreshes until the budget runs out.<br>
+    • <strong>Within each refresh cycle:</strong> chests are generated, then opened according to the strategy (S1–S4).
+      If the budget can't cover everything desired, we open as many as affordable
+      (priority red → yellow → gray), then end the day.<br>
+    • <strong>Milestone rewards:</strong> cumulative — every time total opens (any chest type) reach a threshold,
+      the reward is added to the rose total.<br><br>
+    All four strategies run on the <strong>same random chest sequences</strong> (shared seed)
+    so differences reflect strategy choice, not random noise.
+  `;
+}
+
+// ── Simulation core ───────────────────────────────────────────────────────
+function normProbs(dist) {
+  const total = dist.reduce((s, r) => s + r.prob, 0);
+  return dist.map(r => r.prob / total);
+}
+
+function sampleBatch(dist, probs, count, rng) {
+  let total = 0;
+  for (let i = 0; i < count; i++) {
+    const r = rng();
+    let cum = 0;
+    for (let j = 0; j < probs.length; j++) {
+      cum += probs[j];
+      if (r <= cum) { total += dist[j].roses; break; }
+    }
+  }
+  return total;
+}
+
+function simOneRun(sid, pRed, pYellow, nChests, costOpen, costRefresh, budget,
+                   redDist, redProbs, yellowDist, yellowProbs, grayDist, grayProbs,
+                   days, freePerDay, rng, mOpens, mRewards) {
+  let remaining = budget;
+  let roses = 0;
+  let totalOpens = 0;
+  let nextIdx = 0;
+  const nm = mOpens.length;
+
+  for (let day = 0; day < days; day++) {
+    let freeLeft = freePerDay;
+    const isLast = day === days - 1;
+
+    while (true) {
+      let refreshCost;
+      if (freeLeft > 0)       refreshCost = 0;
+      else if (isLast)        refreshCost = costRefresh;
+      else                    break;
+
+      if (refreshCost > 0 && remaining < refreshCost) break;
+      if (freeLeft > 0) freeLeft--; else remaining -= refreshCost;
+
+      let redCount = 0, yellowCount = 0;
+      for (let i = 0; i < nChests; i++) {
+        const r = rng();
+        if (r < pRed) redCount++;
+        else if (r < pRed + pYellow) yellowCount++;
+      }
+      const grayCount = nChests - redCount - yellowCount;
+
+      let toRed, toYellow, toGray;
+      if (sid === 1) {
+        toRed = redCount; toYellow = 0; toGray = 0;
+      } else if (sid === 2) {
+        toRed = redCount; toYellow = yellowCount; toGray = 0;
+      } else if (sid === 3) {
+        toRed = redCount; toYellow = yellowCount; toGray = grayCount;
+      } else {
+        if (redCount + yellowCount >= 6) {
+          toRed = redCount; toYellow = yellowCount; toGray = grayCount;
+        } else {
+          toRed = redCount; toYellow = 0; toGray = 0;
+        }
+      }
+
+      const totalToOpen = toRed + toYellow + toGray;
+      if (totalToOpen === 0) continue;
+
+      const canOpen = Math.min(totalToOpen, Math.floor(remaining / costOpen));
+      if (canOpen === 0) break;
+      remaining -= canOpen * costOpen;
+
+      let left = canOpen;
+      const chests = [[toRed, redDist, redProbs], [toYellow, yellowDist, yellowProbs], [toGray, grayDist, grayProbs]];
+      for (const [cnt, dist, probs] of chests) {
+        if (left === 0) break;
+        const n = Math.min(left, cnt);
+        if (n > 0) { roses += sampleBatch(dist, probs, n, rng); left -= n; }
+      }
+
+      totalOpens += canOpen;
+      while (nextIdx < nm && totalOpens >= mOpens[nextIdx]) {
+        roses += mRewards[nextIdx];
+        nextIdx++;
+      }
+      if (canOpen < totalToOpen) break;
+    }
+  }
+  return {roses, opens: totalOpens};
+}
+
+function runStrategy(N, sid, pRed, pYellow, nChests, costOpen, costRefresh, budget,
+                     redDist, yellowDist, grayDist, days, freePerDay, seed,
+                     mOpens, mRewards) {
+  const rng = makePRNG(seed);
+  const redProbs   = normProbs(redDist);
+  const yellowProbs = normProbs(yellowDist);
+  const grayProbs  = normProbs(grayDist);
+  const roses  = new Int32Array(N);
+  const opens  = new Int32Array(N);
+  for (let i = 0; i < N; i++) {
+    const r = simOneRun(sid, pRed, pYellow, nChests, costOpen, costRefresh, budget,
+                        redDist, redProbs, yellowDist, yellowProbs, grayDist, grayProbs,
+                        days, freePerDay, rng, mOpens, mRewards);
+    roses[i] = r.roses;
+    opens[i] = r.opens;
+  }
+  return {roses, opens};
+}
+
+// ── Main runner ───────────────────────────────────────────────────────────
+let charts = {};
+
+function setProgress(done, total, label) {
+  const wrap = document.getElementById('progressWrap');
+  wrap.classList.add('visible');
+  document.getElementById('progressLabel').textContent = label;
+  document.getElementById('progressFill').style.width = `${(done / total) * 100}%`;
+  if (done >= total) setTimeout(() => wrap.classList.remove('visible'), 600);
+}
+
+async function runSimulation() {
+  const pRed       = parseFloat(document.getElementById('pRed').value);
+  const pYellow    = parseFloat(document.getElementById('pYellow').value);
+  const nChests    = parseInt(document.getElementById('nChests').value);
+  const costOpen   = parseInt(document.getElementById('costOpen').value);
+  const costRefresh = parseInt(document.getElementById('costRefresh').value);
+  const budget     = parseInt(document.getElementById('budget').value);
+  const days       = parseInt(document.getElementById('days').value);
+  const freePerDay = parseInt(document.getElementById('freePerDay').value);
+  const N          = parseInt(document.getElementById('nRuns').value);
+  const threshold  = parseInt(document.getElementById('threshold').value);
+  const histStep   = parseInt(document.getElementById('histStep').value);
+  const seedInput  = parseInt(document.getElementById('seed').value);
+  const seed       = seedInput === 0 ? randomSeed() : seedInput;
+
+  const redDist    = readTable('red',    'roses', 'prob');
+  const yellowDist = readTable('yellow', 'roses', 'prob');
+  const grayDist   = readTable('gray',   'roses', 'prob');
+  const milestonesRaw = readTable('milestones', 'opens', 'reward');
+  const mSorted = [...milestonesRaw].sort((a, b) => a.opens - b.opens);
+  const mOpens   = mSorted.map(m => m.opens);
+  const mRewards = mSorted.map(m => m.reward);
+
+  if (!redDist.length || !yellowDist.length || !grayDist.length) {
+    alert('Please fill in all three chest distributions before running.');
+    return;
+  }
+
+  const runBtn = document.getElementById('runBtn');
+  runBtn.disabled = true;
+
+  // Destroy old charts
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+
+  const allResults = {};
+  for (let i = 0; i < STRATEGIES.length; i++) {
+    const s = STRATEGIES[i];
+    setProgress(i, STRATEGIES.length, `Running strategy ${i + 1}/${STRATEGIES.length}…`);
+    await new Promise(r => setTimeout(r, 0)); // yield to browser
+    allResults[s.id] = runStrategy(N, s.id, pRed, pYellow, nChests, costOpen, costRefresh, budget,
+                                   redDist, yellowDist, grayDist, days, freePerDay, seed,
+                                   mOpens, mRewards);
+  }
+  setProgress(STRATEGIES.length, STRATEGIES.length, 'Done');
+
+  // Summary stats
+  const summary = STRATEGIES.map(s => {
+    const {roses, opens} = allResults[s.id];
+    const above = roses.filter(v => v > threshold).length;
+    const prob  = above / N;
+    const mean  = roses.reduce((a, b) => a + b, 0) / N;
+    const std   = Math.sqrt(roses.reduce((a, b) => a + (b - mean) ** 2, 0) / N);
+    const sorted = [...roses].sort((a, b) => a - b);
+    const median = sorted[Math.floor(N / 2)];
+    const meanOpens = opens.reduce((a, b) => a + b, 0) / N;
+    return {...s, roses, opens, above, prob, mean, std, median, meanOpens};
+  });
+
+  const winner = summary.reduce((best, s) =>
+    s.prob > best.prob || (s.prob === best.prob && s.mean > best.mean) ? s : best
+  );
+
+  renderResults(summary, winner, threshold, histStep, mSorted, N);
+  runBtn.disabled = false;
+}
+
+function pct(arr, p) {
+  const sorted = [...arr].sort((a, b) => a - b);
+  return sorted[Math.floor(sorted.length * p / 100)];
+}
+
+function renderResults(summary, winner, threshold, histStep, milestones, N) {
+  const el = document.getElementById('results');
+
+  const milestoneHTML = milestones.length ? `
+    <h2>Milestone reach rates — <span style="color:${winner.color}">${winner.name}</span></h2>
+    <div class="milestone-row">
+      ${milestones.map(m => {
+        const rate = winner.opens.filter(o => o >= m.opens).length / N;
+        return `<div class="milestone-box">
+          <div class="milestone-label">≥${m.opens} opens</div>
+          <div class="milestone-rate">${(rate * 100).toFixed(1)}%</div>
+          <div class="milestone-delta">+${m.reward} roses</div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
+
+  const tabBtns = summary.map((s, i) =>
+    `<button class="tab-btn${i === 0 ? ' active' : ''}" onclick="switchTab(${i})" id="tabBtn${i}">${s.name}</button>`
+  ).join('');
+
+  const tabPanes = summary.map((s, i) => {
+    const pcts = [10, 25, 50, 75, 90, 95].map(p => ({p, v: pct(s.roses, p)}));
+    const isWinner = s.id === winner.id;
+    return `<div class="tab-pane${i === 0 ? ' active' : ''}" id="tabPane${i}">
+      ${isWinner ? `<div class="success-banner">🏆 This is the best strategy for the current settings</div>` : ''}
+      <div class="metrics-row">
+        <div class="metric-box"><div class="metric-label">P(roses &gt; ${threshold})</div><div class="metric-value">${(s.prob * 100).toFixed(2)}%</div></div>
+        <div class="metric-box"><div class="metric-label">Mean roses</div><div class="metric-value">${s.mean.toFixed(1)}</div></div>
+        <div class="metric-box"><div class="metric-label">Std dev (σ)</div><div class="metric-value">${s.std.toFixed(1)}</div></div>
+      </div>
+      <div class="pct-row">
+        <div class="pct-box"><div class="pct-label">Min</div><div class="pct-value">${Math.min(...s.roses)}</div></div>
+        ${pcts.map(({p, v}) => `<div class="pct-box"><div class="pct-label">P${p}</div><div class="pct-value">${v}</div></div>`).join('')}
+        <div class="pct-box"><div class="pct-label">Max</div><div class="pct-value">${Math.max(...s.roses)}</div></div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart-${s.id}"></canvas></div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <hr>
+    <div class="winner-card">
+      <div class="winner-eyebrow">🏆 Best Strategy — P(roses &gt; ${threshold})</div>
+      <div class="winner-name" style="color:${winner.color}">${winner.name}</div>
+      <div class="winner-pct" style="color:${winner.color}">${(winner.prob * 100).toFixed(2)}%</div>
+      <div class="winner-sub">
+        Mean roses: ${winner.mean.toFixed(1)} &middot; Median: ${winner.median} &middot;
+        ${winner.above.toLocaleString()} of ${N.toLocaleString()} runs exceeded ${threshold}
+      </div>
+    </div>
+
+    <h2>All strategies</h2>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Strategy</th>
+          <th>P(roses &gt; ${threshold})</th>
+          <th>Mean roses</th>
+          <th>Median</th>
+          <th>Std dev</th>
+          <th>Mean opens</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${summary.map(s => `
+          <tr class="${s.id === winner.id ? 'winner-row' : ''}">
+            <td>${s.name}</td>
+            <td>${(s.prob * 100).toFixed(2)}%</td>
+            <td>${s.mean.toFixed(1)}</td>
+            <td>${s.median}</td>
+            <td>${s.std.toFixed(1)}</td>
+            <td>${s.meanOpens.toFixed(1)}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+
+    ${milestoneHTML}
+
+    <h2>Detail by strategy</h2>
+    <div class="tabs">
+      <div class="tab-buttons">${tabBtns}</div>
+      ${tabPanes}
+    </div>
+  `;
+
+  // Draw histograms after DOM is updated
+  summary.forEach(s => drawHistogram(s, histStep));
+}
+
+function switchTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-pane').forEach((p, i) => p.classList.toggle('active', i === idx));
+  // Redraw chart if needed (canvas may have been hidden)
+  const s = STRATEGIES[idx];
+  if (charts[s.id]) charts[s.id].update();
+}
+
+function drawHistogram(s, step) {
+  const canvas = document.getElementById(`chart-${s.id}`);
+  if (!canvas) return;
+
+  const buckets = {};
+  s.roses.forEach(v => {
+    const b = Math.floor(v / step) * step;
+    buckets[b] = (buckets[b] || 0) + 1;
+  });
+  const keys = Object.keys(buckets).map(Number).sort((a, b) => a - b);
+
+  charts[s.id] = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: keys.map(k => k.toString()),
+      datasets: [{
+        data: keys.map(k => buckets[k]),
+        backgroundColor: s.color + 'bb',
+        borderColor: s.color,
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {legend: {display: false}},
+      scales: {
+        x: {ticks: {color: '#888', maxRotation: 0}, grid: {color: '#1e1e30'}},
+        y: {ticks: {color: '#888'}, grid: {color: '#1e1e30'}},
+      },
+    }
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  populateTable('red',        DEFAULTS.red,        true);
+  populateTable('yellow',     DEFAULTS.yellow,     true);
+  populateTable('gray',       DEFAULTS.gray,       true);
+  populateTable('milestones', DEFAULTS.milestones, false);
+  updateDistStats();
+  updateSidebarLabels();
+
+  ['pRed', 'pYellow', 'days', 'freePerDay'].forEach(id =>
+    document.getElementById(id).addEventListener('input', updateSidebarLabels)
+  );
+});
+</script>
+</body>
+</html>
