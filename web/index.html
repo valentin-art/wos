@@ -3,39 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌹 Rose Chest Calculator</title>
+<title>Frosty Fortune Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *{box-sizing:border-box;margin:0;padding:0;}
 
   :root {
-    --bg:       #0d0d1a;
-    --surface:  #12122a;
-    --surface2: #1a1a2e;
-    --border:   #2a2a40;
-    --text:     #e0e0e0;
-    --muted:    #888;
-    --green:    #6fcf97;
-    --red:      #ff6b6b;
-    --yellow:   #ffd93d;
-    --blue:     #74b9ff;
-    --purple:   #a29bfe;
+    --bg:      #07111F;
+    --surface: #0D1B2A;
+    --surface2:#091520;
+    --border:  #1B6B85;
+    --border-d:rgba(27,107,133,0.35);
+    --text:    #F4F7FB;
+    --muted:   #A9B4C2;
+    --accent:  #27D3FF;
+    --accent-d:rgba(39,211,255,0.07);
+    --red:     rgba(255,90,90,0.9);
   }
 
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
     min-height: 100vh;
+  }
+
+  /* grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(27,107,133,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(27,107,133,0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Nav ── */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; }
+  .logo-diamond {
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--accent);
+    transform: rotate(45deg);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-inner { width: 11px; height: 11px; background: var(--accent); }
+  .nav-brand { font-size: 17px; font-weight: 700; color: var(--accent); letter-spacing: 0.12em; }
+  .nav-brand span { color: var(--text); }
+  .nav-tag {
+    font-size: 12px; letter-spacing: 0.14em; color: var(--muted);
+    border: 1px solid var(--border); padding: 6px 14px;
   }
 
   /* ── Layout ── */
   .layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    min-height: 100vh;
+    grid-template-columns: 272px 1fr;
+    min-height: calc(100vh - 61px);
+    position: relative;
+    z-index: 1;
   }
 
   .sidebar {
@@ -43,369 +87,511 @@
     border-right: 1px solid var(--border);
     padding: 24px 16px;
     position: sticky;
-    top: 0;
-    height: 100vh;
+    top: 61px;
+    height: calc(100vh - 61px);
     overflow-y: auto;
   }
 
   .main {
-    padding: 32px 40px;
-    max-width: 1100px;
+    padding: 32px 36px 80px;
   }
 
   /* ── Typography ── */
-  h1 { font-size: 26px; font-family: Georgia, serif; color: #fff; margin-bottom: 4px; }
-  h2 { font-size: 16px; font-family: Georgia, serif; color: var(--text); margin: 28px 0 12px; }
-  h3 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase;
-       letter-spacing: 1px; margin-bottom: 10px; }
-  .caption { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  h1 {
+    font-size: 28px; font-weight: 700; color: var(--text);
+    letter-spacing: 0.06em; margin-bottom: 4px;
+  }
+  h1 span { color: var(--accent); }
 
-  /* ── Sidebar sections ── */
-  .sidebar-section { margin-bottom: 20px; }
+  h2 {
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin: 28px 0 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2::after { content: ''; flex: 1; height: 1px; background: var(--border-d); }
+
+  .caption { color: var(--muted); font-size: 13px; margin-bottom: 8px; letter-spacing: 0.06em; }
+
+  /* ── Sidebar ── */
+  .sidebar-heading {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+    color: var(--accent); text-transform: uppercase;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .sidebar-section { margin-bottom: 18px; }
   .sidebar-section summary {
     cursor: pointer;
-    font-weight: 600;
-    font-size: 12px;
+    font-size: 11px; font-weight: 600;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.16em;
     padding: 8px 0;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-d);
     list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; justify-content: space-between; align-items: center;
   }
   .sidebar-section summary::after { content: "▾"; font-size: 10px; }
   .sidebar-section[open] summary::after { content: "▴"; }
   .sidebar-section .inner { padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
 
   /* ── Form controls ── */
-  label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 3px; }
+  label {
+    font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+    color: var(--muted); display: block; margin-bottom: 5px;
+  }
 
   input[type="number"], input[type="text"] {
     width: 100%;
-    background: var(--surface2);
+    background: var(--accent-d);
     border: 1px solid var(--border);
-    border-radius: 6px;
     color: var(--text);
-    padding: 6px 10px;
-    font-size: 13px;
+    padding: 10px 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 500;
     outline: none;
-    transition: border-color .15s;
+    transition: border-color .15s, background .15s;
+    -webkit-appearance: none; appearance: none;
   }
   input[type="number"]:focus, input[type="text"]:focus {
-    border-color: var(--green);
+    border-color: var(--accent);
+    background: rgba(39,211,255,0.07);
   }
 
   .info-badge {
-    background: #0d1f0d;
-    border: 1px solid #2a5c2a;
-    border-radius: 6px;
-    color: var(--green);
-    font-size: 12px;
-    padding: 6px 10px;
+    background: rgba(39,211,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-size: 12px; letter-spacing: 0.1em;
+    padding: 7px 10px;
   }
 
   /* ── Buttons ── */
   .btn-primary {
-    background: var(--green);
-    color: #000;
+    background: var(--accent);
+    color: var(--bg);
     border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 15px;
-    font-weight: 700;
+    padding: 14px 24px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     cursor: pointer;
     width: 100%;
     transition: opacity .15s;
+    margin: 20px 0;
   }
   .btn-primary:hover { opacity: .88; }
-  .btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-primary:disabled { opacity: .35; cursor: not-allowed; }
 
   .btn-sm {
-    background: var(--surface2);
+    background: var(--accent-d);
     border: 1px solid var(--border);
-    border-radius: 5px;
     color: var(--muted);
-    padding: 3px 9px;
-    font-size: 12px;
+    padding: 4px 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase;
     cursor: pointer;
+    transition: color .15s, border-color .15s;
   }
-  .btn-sm:hover { color: var(--text); }
-  .btn-sm.danger:hover { color: var(--red); border-color: var(--red); }
+  .btn-sm:hover { color: var(--accent); border-color: var(--accent); }
 
-  /* ── Tables ── */
-  .dist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  /* ── Shell / Cards (corner-bracket style) ── */
+  .shell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    margin-bottom: 16px;
+    padding: 20px;
+  }
+  .shell .corner { position: absolute; width: 14px; height: 14px; }
+  .shell .corner.tl { top: 6px; left: 6px;   border-top:   1.5px solid var(--border); border-left:  1.5px solid var(--border); }
+  .shell .corner.tr { top: 6px; right: 6px;  border-top:   1.5px solid var(--border); border-right: 1.5px solid var(--border); }
+  .shell .corner.bl { bottom: 6px; left: 6px;  border-bottom:1.5px solid var(--border); border-left:  1.5px solid var(--border); }
+  .shell .corner.br { bottom: 6px; right: 6px; border-bottom:1.5px solid var(--border); border-right: 1.5px solid var(--border); }
+
+  /* ── Dist grid ── */
+  .dist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 
   .dist-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
     padding: 14px;
+    position: relative;
   }
   .dist-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
   }
-  .dist-card-title { font-weight: 600; font-size: 13px; }
+  .dist-card-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent);
+  }
 
+  /* ── Editable table ── */
   .editable-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .editable-table th {
     color: var(--muted);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    padding: 4px 6px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 4px 6px; text-align: left;
+    border-bottom: 1px solid var(--border-d);
   }
-  .editable-table td { padding: 3px 4px; }
+  .editable-table td { padding: 2px 4px; }
   .editable-table td input {
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 4px;
     color: var(--text);
-    padding: 3px 5px;
+    padding: 4px 5px;
     width: 100%;
-    font-size: 13px;
-    font-family: monospace;
-  }
-  .editable-table td input:focus {
-    background: var(--surface2);
-    border-color: var(--border);
+    font-size: 13px; font-weight: 500;
+    font-family: 'Rajdhani', monospace;
     outline: none;
   }
-  .editable-table td.del-col { width: 28px; text-align: center; }
+  .editable-table td input:focus {
+    background: var(--accent-d);
+    border-color: var(--border);
+  }
+  .editable-table td.del-col { width: 26px; text-align: center; }
+  #table-milestones th { text-align: center; }
+  #table-milestones td { text-align: center; }
+  #table-milestones td input { text-align: center; }
+  #table-milestones td input:focus { background: transparent; border-color: transparent; }
   .del-row-btn {
-    background: none;
-    border: none;
-    color: var(--border);
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 1;
-    padding: 0 4px;
+    background: none; border: none;
+    color: var(--border); cursor: pointer;
+    font-size: 15px; line-height: 1; padding: 0 4px;
   }
   .del-row-btn:hover { color: var(--red); }
 
-  .dist-stats {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    font-size: 12px;
-  }
+  .dist-stats { display: flex; gap: 8px; margin-top: 10px; }
   .dist-stat {
-    flex: 1;
-    background: var(--surface2);
-    border-radius: 6px;
+    flex: 1; background: var(--surface2);
+    border: 1px solid var(--border-d);
     padding: 6px 8px;
   }
-  .dist-stat-label { color: var(--muted); font-size: 11px; }
-  .dist-stat-value { color: var(--green); font-family: monospace; font-weight: 600; }
+  .dist-stat-label { color: var(--muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .dist-stat-value { color: var(--accent); font-family: monospace; font-weight: 700; font-size: 14px; }
   .dist-stat-value.warn { color: var(--red); }
 
   /* ── Progress ── */
-  .progress-wrap { margin: 16px 0; display: none; }
+  .progress-wrap { margin: 8px 0 16px; display: none; }
   .progress-wrap.visible { display: block; }
-  .progress-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  .progress-bar-bg {
-    background: var(--surface2);
-    border-radius: 99px;
-    height: 6px;
-    overflow: hidden;
-  }
+  .progress-label { font-size: 12px; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+  .progress-bar-bg { background: var(--surface2); height: 3px; }
   .progress-bar-fill {
-    background: var(--green);
-    height: 100%;
-    border-radius: 99px;
-    transition: width .2s;
-    width: 0%;
+    background: var(--accent); height: 100%;
+    transition: width .2s; width: 0%;
+    box-shadow: 0 0 8px rgba(39,211,255,0.6);
   }
 
   /* ── Winner card ── */
   .winner-card {
-    background: linear-gradient(135deg, #0d1f0d 0%, #12122a 100%);
-    border: 1.5px solid var(--green);
-    border-radius: 16px;
-    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    padding: 32px;
     text-align: center;
     margin-bottom: 24px;
+    position: relative;
   }
+  .winner-card .corner { position: absolute; width: 16px; height: 16px; }
+  .winner-card .corner.tl { top: 8px; left: 8px;   border-top:2px solid var(--accent); border-left: 2px solid var(--accent); }
+  .winner-card .corner.tr { top: 8px; right: 8px;  border-top:2px solid var(--accent); border-right:2px solid var(--accent); }
+  .winner-card .corner.bl { bottom:8px; left: 8px;  border-bottom:2px solid var(--accent); border-left: 2px solid var(--accent); }
+  .winner-card .corner.br { bottom:8px; right: 8px; border-bottom:2px solid var(--accent); border-right:2px solid var(--accent); }
   .winner-eyebrow {
-    color: var(--green);
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    color: var(--accent); font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 10px;
   }
-  .winner-name { font-size: 28px; font-weight: 700; font-family: Georgia, serif; }
+  .winner-name { font-size: 26px; font-weight: 700; letter-spacing: 0.08em; }
   .winner-pct {
-    font-size: 52px;
-    font-weight: 700;
-    font-family: monospace;
+    font-size: 56px; font-weight: 700; letter-spacing: 0.04em;
     margin: 8px 0 4px;
+    text-shadow: 0 0 24px rgba(39,211,255,0.5);
   }
-  .winner-sub { color: var(--muted); font-size: 13px; }
+  .winner-sub { color: var(--muted); font-size: 13px; letter-spacing: 0.06em; }
 
   /* ── Comparison table ── */
   .results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .results-table th {
-    color: var(--muted);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    padding: 8px 12px;
-    text-align: left;
+    color: var(--muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    padding: 8px 14px; text-align: left;
     border-bottom: 1px solid var(--border);
   }
-  .results-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
-  .results-table tr.winner-row td { background: #0d1f0d; color: var(--green); font-weight: 600; }
+  .results-table td { padding: 10px 14px; border-bottom: 1px solid var(--border-d); }
+  .results-table tr.winner-row td {
+    background: rgba(39,211,255,0.06); color: var(--accent); font-weight: 700;
+  }
   .results-table tr:last-child td { border-bottom: none; }
 
   /* ── Tabs ── */
   .tabs { margin-top: 28px; }
-  .tab-buttons { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab-buttons {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border); margin-bottom: 20px;
+  }
   .tab-btn {
-    background: none;
-    border: none;
+    background: none; border: none;
     border-bottom: 2px solid transparent;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 14px;
-    margin-bottom: -1px;
+    color: var(--muted); cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 9px 16px; margin-bottom: -1px;
     transition: color .15s;
   }
   .tab-btn:hover { color: var(--text); }
-  .tab-btn.active { color: var(--text); border-bottom-color: var(--green); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
-  /* ── Metrics row ── */
-  .metrics-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  /* ── Metrics ── */
+  .metrics-row { display: flex; gap: 1px; flex-wrap: wrap; margin-bottom: 16px;
+                 background: var(--border-d); border: 1px solid var(--border-d); }
   .metric-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 16px;
-    min-width: 110px;
+    background: var(--bg); padding: 16px 18px; flex: 1; min-width: 110px;
   }
-  .metric-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
-  .metric-value { color: var(--green); font-size: 20px; font-weight: 700; font-family: monospace; margin-top: 2px; }
+  .metric-label {
+    color: var(--muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 4px;
+  }
+  .metric-value {
+    color: var(--accent); font-size: 22px; font-weight: 700;
+    letter-spacing: 0.04em;
+  }
 
   /* ── Percentile row ── */
-  .pct-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .pct-box {
-    background: var(--surface2);
-    border-radius: 7px;
-    padding: 8px 12px;
-    min-width: 68px;
-    text-align: center;
-  }
-  .pct-label { color: var(--muted); font-size: 11px; }
-  .pct-value { color: var(--text); font-size: 15px; font-weight: 600; font-family: monospace; }
+  .pct-row { display: flex; gap: 1px; flex-wrap: wrap; margin-bottom: 20px;
+             background: var(--border-d); }
+  .pct-box { background: var(--surface2); padding: 8px 12px; flex: 1; min-width: 60px; text-align: center; }
+  .pct-label { color: var(--muted); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .pct-value { color: var(--text); font-size: 15px; font-weight: 700; }
 
-  /* ── Milestone metrics ── */
-  .milestone-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
-  .milestone-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    min-width: 100px;
-    text-align: center;
-  }
-  .milestone-label { color: var(--muted); font-size: 11px; }
-  .milestone-rate { color: var(--green); font-size: 18px; font-weight: 700; font-family: monospace; }
-  .milestone-delta { color: #4caf50; font-size: 11px; margin-top: 2px; }
+  /* ── Milestones ── */
+  .milestone-row { display: flex; gap: 1px; flex-wrap: wrap; margin: 16px 0;
+                   background: var(--border-d); }
+  .milestone-box { background: var(--surface); padding: 12px 14px; flex: 1; min-width: 90px; text-align: center; }
+  .milestone-label { color: var(--muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .milestone-rate { color: var(--accent); font-size: 20px; font-weight: 700; }
+  .milestone-delta { color: #4caf50; font-size: 11px; margin-top: 2px; letter-spacing: 0.06em; }
 
   /* ── Canvas ── */
   .chart-wrap { position: relative; height: 220px; margin-bottom: 20px; }
 
-  /* ── Details expander ── */
+  /* ── Expander ── */
   .expander {
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    border: 1px solid var(--border-d);
     margin: 20px 0;
   }
   .expander summary {
-    cursor: pointer;
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
+    cursor: pointer; padding: 12px 16px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+    list-style: none; display: flex; justify-content: space-between;
   }
-  .expander summary::after { content: "▾"; color: var(--muted); }
+  .expander summary::after { content: "▾"; }
   .expander[open] summary::after { content: "▴"; }
-  .expander-body { padding: 0 16px 16px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+  .expander-body { padding: 0 16px 16px; color: var(--muted); font-size: 13px; line-height: 1.8; }
   .expander-body strong { color: var(--text); }
 
   /* ── Divider ── */
-  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  hr { border: none; border-top: 1px solid var(--border-d); margin: 28px 0; }
 
   /* ── Success banner ── */
   .success-banner {
-    background: #0d1f0d;
-    border: 1px solid #2a5c2a;
-    border-radius: 8px;
-    color: var(--green);
+    background: rgba(39,211,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--accent);
     padding: 10px 14px;
-    font-size: 13px;
+    font-size: 13px; letter-spacing: 0.08em;
     margin-bottom: 16px;
   }
 
-  /* ── Placeholder ── */
-  .placeholder {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 40px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 14px;
-    margin-top: 24px;
-  }
-
-  /* ── Section card ── */
+  /* ── Section card (milestones) ── */
   .section-card {
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    border: 1px solid var(--border-d);
     padding: 16px;
     margin-bottom: 16px;
   }
-
-  /* ── Milestones editor ── */
   .milestones-wrap { max-width: 420px; }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  /* ── Radio group ── */
+  .radio-group { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .radio-opt {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 500; color: var(--text);
+    cursor: pointer; letter-spacing: 0.04em;
+  }
+  .radio-opt input[type="radio"] {
+    width: auto; padding: 0; accent-color: var(--accent);
+    background: none; border: none;
+    -webkit-appearance: radio; appearance: radio; flex-shrink: 0;
+  }
+
+  /* ── Advanced mode toggle ── */
+  .adv-toggle-wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer; user-select: none;
+  }
+  .adv-toggle-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text);
+  }
+  .toggle-sw {
+    width: 38px; height: 19px;
+    background: var(--surface2); border: 1px solid var(--border);
+    position: relative; flex-shrink: 0;
+    transition: background .15s, border-color .15s;
+  }
+  .toggle-sw.on { background: var(--accent); border-color: var(--accent); }
+  .toggle-sw::after {
+    content: ''; position: absolute;
+    top: 2px; left: 2px;
+    width: 13px; height: 13px;
+    background: var(--muted);
+    transition: left .15s, background .15s;
+  }
+  .toggle-sw.on::after { left: 21px; background: var(--bg); }
+
+  /* ── Gem displays ── */
+  .gem-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface2); border: 1px solid var(--border-d);
+    padding: 7px 10px; margin-top: 6px;
+  }
+  .gem-row-label { color: var(--muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .gem-row-value { color: var(--accent); font-weight: 700; font-size: 15px; font-family: monospace; }
+
+  .total-gems-box {
+    background: rgba(39,211,255,0.06); border: 1px solid var(--accent);
+    padding: 12px 14px; margin-top: 8px;
+  }
+  .total-gems-label {
+    color: var(--accent); font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .total-gems-value { color: var(--text); font-size: 22px; font-weight: 700; }
+
+  /* ── Tome checkbox ── */
+  .tome-row {
+    display: flex; align-items: flex-start; gap: 9px;
+    padding: 8px 0; cursor: pointer;
+  }
+  .tome-row input[type="checkbox"] {
+    width: auto; padding: 0; margin-top: 2px; flex-shrink: 0;
+    accent-color: var(--accent); cursor: pointer;
+    background: none; border: none;
+    -webkit-appearance: checkbox; appearance: checkbox;
+  }
+  .tome-main { font-size: 13px; font-weight: 600; color: var(--text); }
+  .tome-sub  { font-size: 11px; color: var(--accent); letter-spacing: 0.06em; }
+
+  /* ── Packs table ── */
+  .packs-wrap { overflow-x: auto; margin-top: 8px; }
+  .packs-table { border-collapse: collapse; font-size: 12px; white-space: nowrap; width: 100%; }
+  .packs-table th {
+    color: var(--muted); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 4px 5px;
+    border-bottom: 1px solid var(--border-d); text-align: center;
+  }
+  .packs-table th:first-child { text-align: left; }
+  .packs-table td { padding: 3px 5px; text-align: center; }
+  .packs-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+  .packs-table td:nth-child(2) { color: var(--accent); font-size: 11px; }
+  .packs-table input[type="checkbox"] {
+    width: auto; padding: 0;
+    accent-color: var(--accent); cursor: pointer;
+    background: none; border: none;
+    -webkit-appearance: checkbox; appearance: checkbox;
+  }
+
+  /* ── Strategy cards ── */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 16px 0 28px;
+  }
+  .strategy-card {
+    background: var(--surface);
+    border: 1px solid var(--border-d);
+    border-top: 2px solid var(--s-color);
+    padding: 14px 14px 16px;
+    position: relative;
+  }
+  .strategy-tag {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--s-color); margin-bottom: 6px;
+  }
+  .strategy-name {
+    font-size: 14px; font-weight: 700;
+    color: var(--text); margin-bottom: 6px;
+    letter-spacing: 0.04em;
+  }
+  .strategy-desc {
+    font-size: 12px; color: var(--muted);
+    line-height: 1.6;
+  }
+  @media (max-width: 860px) {
+    .strategy-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
 
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
-    .sidebar { position: static; height: auto; }
-    .main { padding: 20px 16px; }
+    .sidebar { position: static; height: auto; top: 0; }
+    .main { padding: 20px 16px 60px; }
     .dist-grid { grid-template-columns: 1fr; }
+    .nav { padding: 14px 16px; }
+    .nav-tag { display: none; }
   }
 </style>
 </head>
 <body>
 
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="logo-diamond"><div class="logo-inner"></div></div>
+    <span class="nav-brand">FROSTY <span>FORTUNE</span></span>
+  </div>
+  <span class="nav-tag">FROSTY FORTUNE CALCULATOR</span>
+</nav>
+
 <div class="layout">
 
   <!-- ── Sidebar ─────────────────────────────────────────────────────────── -->
   <aside class="sidebar">
-    <h3 style="margin-bottom:20px">⚙️ Parameters</h3>
+    <div class="sidebar-heading">⚙ Parameters</div>
 
+    <!-- 1. Game structure — top, open -->
     <details class="sidebar-section" open>
+      <summary>Game structure</summary>
+      <div class="inner">
+        <div>
+          <label>Days</label>
+          <input type="number" id="days" value="6" min="1" max="30" step="1">
+        </div>
+        <div>
+          <label>Free refreshes / day</label>
+          <input type="number" id="freePerDay" value="3" min="0" max="50" step="1">
+        </div>
+        <div id="totalFreesBadge" class="info-badge">Total free refreshes: 18</div>
+      </div>
+    </details>
+
+    <!-- 2. Chest spawn probabilities — collapsed -->
+    <details class="sidebar-section">
       <summary>Chest spawn probabilities</summary>
       <div class="inner">
         <div>
@@ -424,39 +610,99 @@
       </div>
     </details>
 
-    <details class="sidebar-section" open>
-      <summary>Costs &amp; budget</summary>
+    <!-- 3. Costs — collapsed -->
+    <details class="sidebar-section">
+      <summary>Costs</summary>
       <div class="inner">
         <div>
-          <label>Open cost</label>
+          <label>Open cost (gems)</label>
           <input type="number" id="costOpen" value="60" min="0" step="1">
         </div>
         <div>
-          <label>Refresh cost</label>
+          <label>Refresh cost (gems)</label>
           <input type="number" id="costRefresh" value="90" min="0" step="1">
         </div>
-        <div>
-          <label>Budget</label>
-          <input type="number" id="budget" value="4000" min="0" step="10">
-        </div>
       </div>
     </details>
 
-    <details class="sidebar-section" open>
-      <summary>Game structure</summary>
-      <div class="inner">
-        <div>
-          <label>Days</label>
-          <input type="number" id="days" value="4" min="1" max="30" step="1">
-        </div>
-        <div>
-          <label>Free refreshes / day</label>
-          <input type="number" id="freePerDay" value="3" min="0" max="50" step="1">
-        </div>
-        <div id="totalFreesBadge" class="info-badge">Total free refreshes: 12</div>
-      </div>
-    </details>
+    <!-- 4. Advanced mode toggle -->
+    <div class="adv-toggle-wrap" onclick="toggleAdvancedMode()">
+      <span class="adv-toggle-label">Advanced mode</span>
+      <div class="toggle-sw" id="advToggle"></div>
+    </div>
 
+    <!-- Simple mode: manual budget -->
+    <div id="simpleBudget" style="display:none">
+      <details class="sidebar-section" open>
+        <summary>Budget</summary>
+        <div class="inner">
+          <div>
+            <label>Total gems</label>
+            <input type="number" id="budget" value="4000" min="0" step="10">
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Advanced mode sections -->
+    <div id="advSections">
+
+      <details class="sidebar-section" open>
+        <summary>Packs</summary>
+        <div class="inner">
+          <label class="tome-row">
+            <input type="checkbox" id="tomeCb" onchange="updateGems()">
+            <span>
+              <div class="tome-main">Treasure Hunt Tome</div>
+              <div class="tome-sub">+360 gems · doubles missions &amp; drill</div>
+            </span>
+          </label>
+          <div>
+            <div style="font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px">Daily packs — check if purchased</div>
+            <div class="packs-wrap">
+              <table class="packs-table">
+                <thead id="packsHead"></thead>
+                <tbody id="packsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="sidebar-section" open>
+        <summary>Daily missions</summary>
+        <div class="inner">
+          <div class="caption">Considered completed each day</div>
+          <div class="gem-row">
+            <span class="gem-row-label">Total</span>
+            <span class="gem-row-value" id="missionsGems">840</span>
+          </div>
+        </div>
+      </details>
+
+      <details class="sidebar-section" open>
+        <summary>Treasure Hunt Drill</summary>
+        <div class="inner">
+          <div class="gem-row">
+            <span class="gem-row-label">Total</span>
+            <span class="gem-row-value" id="drillGems">240</span>
+          </div>
+        </div>
+      </details>
+
+      <details class="sidebar-section" open>
+        <summary>Total gems</summary>
+        <div class="inner">
+          <div class="total-gems-box">
+            <div class="total-gems-label">Budget for simulation</div>
+            <div class="total-gems-value" id="totalGemsDisplay">—</div>
+          </div>
+        </div>
+      </details>
+
+    </div><!-- /advSections -->
+
+    <!-- 5. Simulation -->
     <details class="sidebar-section" open>
       <summary>Simulation</summary>
       <div class="inner">
@@ -478,91 +724,114 @@
         </div>
       </div>
     </details>
+
   </aside>
 
   <!-- ── Main ──────────────────────────────────────────────────────────────── -->
   <main class="main">
-    <h1>🌹 Rose Chest Calculator</h1>
+    <h1>🌹 Frosty Fortune <span>Calculator</span></h1>
     <p class="caption" id="mainCaption">Monte Carlo · 4 days · 3 free refreshes/day · All 4 strategies simulated</p>
 
-    <!-- Distribution editors -->
-    <h2>Rose distributions per chest type</h2>
-    <div class="dist-grid">
-      <div class="dist-card" id="card-red">
-        <div class="dist-card-header">
-          <span class="dist-card-title">🔴 Red</span>
-          <button class="btn-sm" onclick="addRow('red')">+ row</button>
-        </div>
-        <table class="editable-table" id="table-red">
-          <thead><tr><th>Roses</th><th>Probability</th><th></th></tr></thead>
-          <tbody></tbody>
-        </table>
-        <div class="dist-stats">
-          <div class="dist-stat">
-            <div class="dist-stat-label">E(roses)</div>
-            <div class="dist-stat-value" id="ev-red">—</div>
-          </div>
-          <div class="dist-stat">
-            <div class="dist-stat-label">Σ probs</div>
-            <div class="dist-stat-value" id="sum-red">—</div>
-          </div>
-        </div>
+    <!-- Strategy cards -->
+    <div class="strategy-grid">
+      <div class="strategy-card" style="--s-color:#ff6b6b">
+        <div class="strategy-tag">S1</div>
+        <div class="strategy-name">Red only</div>
+        <div class="strategy-desc">Open red chests whenever available; skip the rest and refresh</div>
       </div>
-
-      <div class="dist-card" id="card-yellow">
-        <div class="dist-card-header">
-          <span class="dist-card-title">🟡 Yellow</span>
-          <button class="btn-sm" onclick="addRow('yellow')">+ row</button>
-        </div>
-        <table class="editable-table" id="table-yellow">
-          <thead><tr><th>Roses</th><th>Probability</th><th></th></tr></thead>
-          <tbody></tbody>
-        </table>
-        <div class="dist-stats">
-          <div class="dist-stat">
-            <div class="dist-stat-label">E(roses)</div>
-            <div class="dist-stat-value" id="ev-yellow">—</div>
-          </div>
-          <div class="dist-stat">
-            <div class="dist-stat-label">Σ probs</div>
-            <div class="dist-stat-value" id="sum-yellow">—</div>
-          </div>
-        </div>
+      <div class="strategy-card" style="--s-color:#ffd93d">
+        <div class="strategy-tag">S2</div>
+        <div class="strategy-name">Red + Yellow</div>
+        <div class="strategy-desc">Open red and yellow chests; ignore gray and refresh</div>
       </div>
-
-      <div class="dist-card" id="card-gray">
-        <div class="dist-card-header">
-          <span class="dist-card-title">⬜ Gray</span>
-          <button class="btn-sm" onclick="addRow('gray')">+ row</button>
-        </div>
-        <table class="editable-table" id="table-gray">
-          <thead><tr><th>Roses</th><th>Probability</th><th></th></tr></thead>
-          <tbody></tbody>
-        </table>
-        <div class="dist-stats">
-          <div class="dist-stat">
-            <div class="dist-stat-label">E(roses)</div>
-            <div class="dist-stat-value" id="ev-gray">—</div>
-          </div>
-          <div class="dist-stat">
-            <div class="dist-stat-label">Σ probs</div>
-            <div class="dist-stat-value" id="sum-gray">—</div>
-          </div>
-        </div>
+      <div class="strategy-card" style="--s-color:#74b9ff">
+        <div class="strategy-tag">S3</div>
+        <div class="strategy-name">Open all</div>
+        <div class="strategy-desc">Open every chest in every refresh cycle without exception</div>
+      </div>
+      <div class="strategy-card" style="--s-color:#a29bfe">
+        <div class="strategy-tag">S4</div>
+        <div class="strategy-name">Hybrid ≥6</div>
+        <div class="strategy-desc">Open all chests if 6+ valuable ones appear; otherwise red only</div>
       </div>
     </div>
 
+    <!-- Distribution editors -->
+    <details class="expander">
+      <summary>Rose distributions per chest type</summary>
+      <div class="expander-body" style="padding:16px">
+        <div class="dist-grid">
+          <div class="dist-card" id="card-red">
+            <div class="dist-card-header">
+              <span class="dist-card-title" style="color:#ff6b6b">Red chest</span>
+            </div>
+            <table class="editable-table" id="table-red">
+              <thead><tr><th>Roses</th><th>Probability</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="dist-stats">
+              <div class="dist-stat">
+                <div class="dist-stat-label">E(roses)</div>
+                <div class="dist-stat-value" id="ev-red">—</div>
+              </div>
+              <div class="dist-stat">
+                <div class="dist-stat-label">Σ probs</div>
+                <div class="dist-stat-value" id="sum-red">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dist-card" id="card-yellow">
+            <div class="dist-card-header">
+              <span class="dist-card-title" style="color:#ffd93d">Yellow chest</span>
+            </div>
+            <table class="editable-table" id="table-yellow">
+              <thead><tr><th>Roses</th><th>Probability</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="dist-stats">
+              <div class="dist-stat">
+                <div class="dist-stat-label">E(roses)</div>
+                <div class="dist-stat-value" id="ev-yellow">—</div>
+              </div>
+              <div class="dist-stat">
+                <div class="dist-stat-label">Σ probs</div>
+                <div class="dist-stat-value" id="sum-yellow">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dist-card" id="card-gray">
+            <div class="dist-card-header">
+              <span class="dist-card-title" style="color:#A9B4C2">Gray chest</span>
+            </div>
+            <table class="editable-table" id="table-gray">
+              <thead><tr><th>Roses</th><th>Probability</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="dist-stats">
+              <div class="dist-stat">
+                <div class="dist-stat-label">E(roses)</div>
+                <div class="dist-stat-value" id="ev-gray">—</div>
+              </div>
+              <div class="dist-stat">
+                <div class="dist-stat-label">Σ probs</div>
+                <div class="dist-stat-value" id="sum-gray">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
     <!-- Milestone editor -->
-    <h2>🏆 Milestone rewards</h2>
+    <h2>Milestone rewards</h2>
     <p class="caption">Cumulative rewards earned when total chest opens reach each threshold.</p>
     <div class="section-card milestones-wrap">
       <table class="editable-table" id="table-milestones">
-        <thead><tr><th>Total opens</th><th>Reward (roses)</th><th></th></tr></thead>
+        <thead><tr><th>Total opens</th><th>Roses</th><th>Gear Chests</th></tr></thead>
         <tbody></tbody>
       </table>
-      <div style="margin-top:10px">
-        <button class="btn-sm" onclick="addMilestone()">+ row</button>
-      </div>
     </div>
 
     <!-- Logic explanation -->
@@ -573,6 +842,15 @@
 
     <!-- Run button -->
     <button class="btn-primary" id="runBtn" onclick="runSimulation()">▶ Run all strategies</button>
+
+    <!-- Optimize for -->
+    <div style="margin-top:12px;display:flex;align-items:center;gap:16px">
+      <label style="color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:0.08em">Optimize for</label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="optMode" value="roses" checked> Roses</label>
+        <label class="radio-opt"><input type="radio" name="optMode" value="chests"> Gear Chests (1 = 10 roses)</label>
+      </div>
+    </div>
 
     <!-- Progress -->
     <div class="progress-wrap" id="progressWrap">
@@ -606,8 +884,14 @@ const DEFAULTS = {
   red:    [{roses: 100, prob: 0.02}, {roses: 50, prob: 0.06}, {roses: 20, prob: 0.42}, {roses: 0, prob: 0.50}],
   yellow: [{roses: 100, prob: 0.005}, {roses: 20, prob: 0.06}, {roses: 6, prob: 0.42}, {roses: 0, prob: 0.515}],
   gray:   [{roses: 100, prob: 0.003}, {roses: 6, prob: 0.107}, {roses: 3, prob: 0.405}, {roses: 0, prob: 0.485}],
-  milestones: [{opens: 20, reward: 30}, {opens: 50, reward: 50}, {opens: 100, reward: 200},
-               {opens: 150, reward: 100}, {opens: 300, reward: 200}, {opens: 500, reward: 500}],
+  milestones: [
+    {opens:  20, roses:  30, chests:  0},
+    {opens:  50, roses:  50, chests:  0},
+    {opens: 100, roses:   0, chests: 20},
+    {opens: 150, roses: 100, chests:  0},
+    {opens: 300, roses: 200, chests:  0},
+    {opens: 500, roses:   0, chests: 30},
+  ],
 };
 
 const STRATEGIES = [
@@ -618,6 +902,78 @@ const STRATEGIES = [
 ];
 
 // ── Editable table helpers ────────────────────────────────────────────────
+function makeFixedRow(tbody, cells) {
+  const tr = document.createElement('tr');
+  cells.forEach(({value, step}) => {
+    const td = document.createElement('td');
+    const inp = document.createElement('input');
+    inp.type = 'number';
+    inp.value = value ?? '';
+    inp.step = step ?? 1;
+    inp.addEventListener('input', updateDistStats);
+    td.appendChild(inp);
+    tr.appendChild(td);
+  });
+  tbody.appendChild(tr);
+}
+
+function populateFixedTable(id, rows) {
+  const tbody = document.querySelector(`#table-${id} tbody`);
+  tbody.innerHTML = '';
+  rows.forEach(r => makeFixedRow(tbody, [{value: r.roses, step: 1}, {value: r.prob, step: 0.001}]));
+}
+
+function populateFixedMilestoneTable() {
+  const tbody = document.querySelector('#table-milestones tbody');
+  tbody.innerHTML = '';
+  DEFAULTS.milestones.forEach(m => {
+    const tr = document.createElement('tr');
+
+    // Opens (read-only)
+    const tdO = document.createElement('td');
+    tdO.innerHTML = `<input type="number" value="${m.opens}" step="1" readonly style="color:var(--muted);cursor:default">`;
+    tr.appendChild(tdO);
+
+    // Roses — show "–" when no rose reward, otherwise read-only number
+    const tdR = document.createElement('td');
+    if (m.roses === 0) {
+      tdR.innerHTML = `<input type="text" value="–" readonly style="color:var(--muted);cursor:default;text-align:center">`;
+    } else {
+      const inp = document.createElement('input');
+      inp.type = 'number'; inp.value = m.roses; inp.readOnly = true;
+      inp.style.cursor = 'default';
+      tdR.appendChild(inp);
+    }
+    tr.appendChild(tdR);
+
+    // Gear chests — show "–" when 0, otherwise read-only number
+    const tdC = document.createElement('td');
+    if (m.chests === 0) {
+      tdC.innerHTML = `<input type="text" value="–" readonly style="color:var(--muted);cursor:default;text-align:center">`;
+    } else {
+      const inp = document.createElement('input');
+      inp.type = 'number'; inp.value = m.chests; inp.readOnly = true;
+      inp.style.color = 'var(--accent)'; inp.style.cursor = 'default';
+      tdC.appendChild(inp);
+    }
+    tr.appendChild(tdC);
+
+    tbody.appendChild(tr);
+  });
+}
+
+function readMilestoneTable() {
+  const rows = [];
+  document.querySelectorAll('#table-milestones tbody tr').forEach((tr, i) => {
+    const inputs = tr.querySelectorAll('input');
+    const opens  = parseFloat(inputs[0].value);
+    const roses  = parseFloat(inputs[1].value) || 0;   // "–" parses as NaN → 0
+    const chests = parseFloat(inputs[2].value) || 0;
+    if (!isNaN(opens)) rows.push({opens, roses, chests});
+  });
+  return rows;
+}
+
 function makeRow(tbody, cells, onDelete) {
   const tr = document.createElement('tr');
   cells.forEach(({value, step, placeholder}) => {
@@ -703,7 +1059,7 @@ function updateSidebarLabels() {
 }
 
 function updateLogicText() {
-  const days = parseInt(document.getElementById('days').value) || 4;
+  const days = parseInt(document.getElementById('days').value) || 6;
   const free = parseInt(document.getElementById('freePerDay').value) || 3;
   document.getElementById('logicText').innerHTML = `
     <strong>Optimal play strategy used for every strategy variant:</strong><br><br>
@@ -741,9 +1097,10 @@ function sampleBatch(dist, probs, count, rng) {
 
 function simOneRun(sid, pRed, pYellow, nChests, costOpen, costRefresh, budget,
                    redDist, redProbs, yellowDist, yellowProbs, grayDist, grayProbs,
-                   days, freePerDay, rng, mOpens, mRewards) {
+                   days, freePerDay, rng, mOpens, mRoseRewards, mChestRewards) {
   let remaining = budget;
   let roses = 0;
+  let gearChests = 0;
   let totalOpens = 0;
   let nextIdx = 0;
   const nm = mOpens.length;
@@ -801,32 +1158,35 @@ function simOneRun(sid, pRed, pYellow, nChests, costOpen, costRefresh, budget,
 
       totalOpens += canOpen;
       while (nextIdx < nm && totalOpens >= mOpens[nextIdx]) {
-        roses += mRewards[nextIdx];
+        roses      += mRoseRewards[nextIdx];
+        gearChests += mChestRewards[nextIdx];
         nextIdx++;
       }
       if (canOpen < totalToOpen) break;
     }
   }
-  return {roses, opens: totalOpens};
+  return {roses, opens: totalOpens, gearChests};
 }
 
 function runStrategy(N, sid, pRed, pYellow, nChests, costOpen, costRefresh, budget,
                      redDist, yellowDist, grayDist, days, freePerDay, seed,
-                     mOpens, mRewards) {
+                     mOpens, mRoseRewards, mChestRewards) {
   const rng = makePRNG(seed);
-  const redProbs   = normProbs(redDist);
+  const redProbs    = normProbs(redDist);
   const yellowProbs = normProbs(yellowDist);
-  const grayProbs  = normProbs(grayDist);
-  const roses  = new Int32Array(N);
-  const opens  = new Int32Array(N);
+  const grayProbs   = normProbs(grayDist);
+  const roses      = new Int32Array(N);
+  const opens      = new Int32Array(N);
+  const gearChests = new Int32Array(N);
   for (let i = 0; i < N; i++) {
     const r = simOneRun(sid, pRed, pYellow, nChests, costOpen, costRefresh, budget,
                         redDist, redProbs, yellowDist, yellowProbs, grayDist, grayProbs,
-                        days, freePerDay, rng, mOpens, mRewards);
-    roses[i] = r.roses;
-    opens[i] = r.opens;
+                        days, freePerDay, rng, mOpens, mRoseRewards, mChestRewards);
+    roses[i]      = r.roses;
+    opens[i]      = r.opens;
+    gearChests[i] = r.gearChests;
   }
-  return {roses, opens};
+  return {roses, opens, gearChests};
 }
 
 // ── Main runner ───────────────────────────────────────────────────────────
@@ -858,10 +1218,11 @@ async function runSimulation() {
   const redDist    = readTable('red',    'roses', 'prob');
   const yellowDist = readTable('yellow', 'roses', 'prob');
   const grayDist   = readTable('gray',   'roses', 'prob');
-  const milestonesRaw = readTable('milestones', 'opens', 'reward');
-  const mSorted = [...milestonesRaw].sort((a, b) => a.opens - b.opens);
-  const mOpens   = mSorted.map(m => m.opens);
-  const mRewards = mSorted.map(m => m.reward);
+  const mRaw   = readMilestoneTable().sort((a, b) => a.opens - b.opens);
+  const mOpens        = mRaw.map(m => m.opens);
+  const mRoseRewards  = mRaw.map(m => m.roses);
+  const mChestRewards = mRaw.map(m => m.chests);
+  const optMode = document.querySelector('input[name="optMode"]:checked').value;
 
   if (!redDist.length || !yellowDist.length || !grayDist.length) {
     alert('Please fill in all three chest distributions before running.');
@@ -869,42 +1230,56 @@ async function runSimulation() {
   }
 
   const runBtn = document.getElementById('runBtn');
+  const resultsEl = document.getElementById('results');
   runBtn.disabled = true;
+  resultsEl.innerHTML = '';
 
-  // Destroy old charts
   Object.values(charts).forEach(c => c.destroy());
   charts = {};
+
+  try {
 
   const allResults = {};
   for (let i = 0; i < STRATEGIES.length; i++) {
     const s = STRATEGIES[i];
     setProgress(i, STRATEGIES.length, `Running strategy ${i + 1}/${STRATEGIES.length}…`);
-    await new Promise(r => setTimeout(r, 0)); // yield to browser
+    await new Promise(r => setTimeout(r, 0));
     allResults[s.id] = runStrategy(N, s.id, pRed, pYellow, nChests, costOpen, costRefresh, budget,
                                    redDist, yellowDist, grayDist, days, freePerDay, seed,
-                                   mOpens, mRewards);
+                                   mOpens, mRoseRewards, mChestRewards);
   }
   setProgress(STRATEGIES.length, STRATEGIES.length, 'Done');
 
-  // Summary stats
   const summary = STRATEGIES.map(s => {
-    const {roses, opens} = allResults[s.id];
-    const above = roses.filter(v => v > threshold).length;
-    const prob  = above / N;
-    const mean  = roses.reduce((a, b) => a + b, 0) / N;
-    const std   = Math.sqrt(roses.reduce((a, b) => a + (b - mean) ** 2, 0) / N);
-    const sorted = [...roses].sort((a, b) => a - b);
-    const median = sorted[Math.floor(N / 2)];
-    const meanOpens = opens.reduce((a, b) => a + b, 0) / N;
-    return {...s, roses, opens, above, prob, mean, std, median, meanOpens};
+    const {roses, opens, gearChests} = allResults[s.id];
+    // mean = avg roses (includes rose milestones, excludes chest milestones)
+    const mean       = roses.reduce((a, b) => a + b, 0) / N;
+    const meanChests = gearChests.reduce((a, b) => a + b, 0) / N;
+    // combined = roses + gearChests*10 (used as objective in "chests" mode)
+    const meanCombined = mean + meanChests * 10;
+    const above      = roses.filter(v => v > threshold).length;
+    const prob       = above / N;
+    const std        = Math.sqrt(roses.reduce((a, b) => a + (b - mean) ** 2, 0) / N);
+    const median     = [...roses].sort((a, b) => a - b)[Math.floor(N / 2)];
+    const meanOpens  = opens.reduce((a, b) => a + b, 0) / N;
+    return {...s, roses, opens, gearChests, above, prob, mean, std, median, meanOpens, meanChests, meanCombined};
   });
 
-  const winner = summary.reduce((best, s) =>
-    s.prob > best.prob || (s.prob === best.prob && s.mean > best.mean) ? s : best
-  );
+  // Roses mode: maximize avg roses. Chests mode: maximize roses + gearChests*10.
+  const rosesMode = optMode === 'roses';
+  const winner = rosesMode
+    ? summary.reduce((best, s) => s.mean > best.mean ? s : best)
+    : summary.reduce((best, s) => s.meanCombined > best.meanCombined ? s : best);
 
-  renderResults(summary, winner, threshold, histStep, mSorted, N);
+  renderResults(summary, winner, threshold, histStep, mRaw, N, optMode);
   runBtn.disabled = false;
+  } catch(e) {
+    resultsEl.innerHTML = `<div style="color:#ff6b6b;padding:16px;border:1px solid #ff6b6b;margin-top:16px">
+      <strong>Error:</strong> ${e.message}<br><pre style="font-size:11px;margin-top:8px;white-space:pre-wrap">${e.stack}</pre>
+    </div>`;
+    runBtn.disabled = false;
+    throw e;
+  }
 }
 
 function pct(arr, p) {
@@ -912,18 +1287,22 @@ function pct(arr, p) {
   return sorted[Math.floor(sorted.length * p / 100)];
 }
 
-function renderResults(summary, winner, threshold, histStep, milestones, N) {
+function renderResults(summary, winner, threshold, histStep, milestones, N, optMode) {
   const el = document.getElementById('results');
+  const rosesMode = optMode === 'roses';
 
   const milestoneHTML = milestones.length ? `
-    <h2>Milestone reach rates — <span style="color:${winner.color}">${winner.name}</span></h2>
+    <h2>Milestone reach rates — ${winner.name}</h2>
     <div class="milestone-row">
       ${milestones.map(m => {
         const rate = winner.opens.filter(o => o >= m.opens).length / N;
+        const rewardStr = m.roses > 0
+          ? `+${m.roses} roses`
+          : `+${m.chests} gear chests`;
         return `<div class="milestone-box">
           <div class="milestone-label">≥${m.opens} opens</div>
           <div class="milestone-rate">${(rate * 100).toFixed(1)}%</div>
-          <div class="milestone-delta">+${m.reward} roses</div>
+          <div class="milestone-delta">${rewardStr}</div>
         </div>`;
       }).join('')}
     </div>` : '';
@@ -933,13 +1312,24 @@ function renderResults(summary, winner, threshold, histStep, milestones, N) {
   ).join('');
 
   const tabPanes = summary.map((s, i) => {
-    const pcts = [10, 25, 50, 75, 90, 95].map(p => ({p, v: pct(s.roses, p)}));
     const isWinner = s.id === winner.id;
+    const pcts = [10, 25, 50, 75, 90, 95].map(p => ({p, v: pct(s.roses, p)}));
+    const primaryBox = rosesMode
+      ? `<div class="metric-box">
+           <div class="metric-label">Avg roses</div>
+           <div class="metric-value">${Math.floor(s.mean)} <span style="color:var(--muted);font-size:16px">+ ${Math.floor(s.meanChests)}</span></div>
+           <div style="color:var(--muted);font-size:11px;margin-top:4px;letter-spacing:0.06em">roses + milestone chests</div>
+         </div>`
+      : `<div class="metric-box">
+           <div class="metric-label">Avg chests ~ roses</div>
+           <div class="metric-value">${Math.floor(s.meanCombined / 10)} <span style="color:var(--muted);font-size:16px">~ ${Math.floor(s.meanCombined)}</span></div>
+           <div style="color:var(--muted);font-size:11px;margin-top:4px;letter-spacing:0.06em">chests ~ rose-equivalent</div>
+         </div>`;
     return `<div class="tab-pane${i === 0 ? ' active' : ''}" id="tabPane${i}">
       ${isWinner ? `<div class="success-banner">🏆 This is the best strategy for the current settings</div>` : ''}
       <div class="metrics-row">
-        <div class="metric-box"><div class="metric-label">P(roses &gt; ${threshold})</div><div class="metric-value">${(s.prob * 100).toFixed(2)}%</div></div>
-        <div class="metric-box"><div class="metric-label">Mean roses</div><div class="metric-value">${s.mean.toFixed(1)}</div></div>
+        ${primaryBox}
+        <div class="metric-box"><div class="metric-label">Median roses</div><div class="metric-value">${s.median}</div></div>
         <div class="metric-box"><div class="metric-label">Std dev (σ)</div><div class="metric-value">${s.std.toFixed(1)}</div></div>
       </div>
       <div class="pct-row">
@@ -951,16 +1341,26 @@ function renderResults(summary, winner, threshold, histStep, milestones, N) {
     </div>`;
   }).join('');
 
+  const winnerCard = rosesMode
+    ? { eyebrow: 'Best Strategy — Roses',
+        big: `${Math.floor(winner.mean)} + ${Math.floor(winner.meanChests)}`,
+        sub1: `avg roses + avg milestone chests`,
+        sub2: `P(roses &gt; ${threshold}) = <strong style="color:${winner.color}">${(winner.prob * 100).toFixed(2)}%</strong> · median ${winner.median}` }
+    : { eyebrow: 'Best Strategy — Chests',
+        big: `${Math.floor(winner.meanCombined / 10)} ~ ${Math.floor(winner.meanCombined)}`,
+        sub1: `avg chests ~ avg rose-equivalent`,
+        sub2: `avg roses ${Math.floor(winner.mean)} · ${Math.floor(winner.meanChests)} milestone chests · median ${winner.median}` };
+
   el.innerHTML = `
     <hr>
     <div class="winner-card">
-      <div class="winner-eyebrow">🏆 Best Strategy — P(roses &gt; ${threshold})</div>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="winner-eyebrow">${winnerCard.eyebrow}</div>
       <div class="winner-name" style="color:${winner.color}">${winner.name}</div>
-      <div class="winner-pct" style="color:${winner.color}">${(winner.prob * 100).toFixed(2)}%</div>
-      <div class="winner-sub">
-        Mean roses: ${winner.mean.toFixed(1)} &middot; Median: ${winner.median} &middot;
-        ${winner.above.toLocaleString()} of ${N.toLocaleString()} runs exceeded ${threshold}
-      </div>
+      <div class="winner-pct" style="color:${winner.color};text-shadow:0 0 24px ${winner.color}88">${winnerCard.big}</div>
+      <div class="winner-sub" style="margin-bottom:6px">${winnerCard.sub1}</div>
+      <div class="winner-sub">${winnerCard.sub2}</div>
     </div>
 
     <h2>All strategies</h2>
@@ -968,21 +1368,23 @@ function renderResults(summary, winner, threshold, histStep, milestones, N) {
       <thead>
         <tr>
           <th>Strategy</th>
-          <th>P(roses &gt; ${threshold})</th>
-          <th>Mean roses</th>
-          <th>Median</th>
-          <th>Std dev</th>
-          <th>Mean opens</th>
+          ${rosesMode
+            ? `<th>Avg roses</th><th>Milestone chests</th>`
+            : `<th>Avg chests</th><th>= Avg roses</th>`}
+          <th>P(&gt;${threshold})</th>
+          <th>Median roses</th>
+          <th>Avg opens</th>
         </tr>
       </thead>
       <tbody>
         ${summary.map(s => `
           <tr class="${s.id === winner.id ? 'winner-row' : ''}">
             <td>${s.name}</td>
+            ${rosesMode
+              ? `<td>${Math.floor(s.mean)}</td><td>${Math.floor(s.meanChests)}</td>`
+              : `<td>${Math.floor(s.meanCombined / 10)}</td><td>${Math.floor(s.meanCombined)}</td>`}
             <td>${(s.prob * 100).toFixed(2)}%</td>
-            <td>${s.mean.toFixed(1)}</td>
             <td>${s.median}</td>
-            <td>${s.std.toFixed(1)}</td>
             <td>${s.meanOpens.toFixed(1)}</td>
           </tr>`).join('')}
       </tbody>
@@ -1037,25 +1439,115 @@ function drawHistogram(s, step) {
       maintainAspectRatio: false,
       plugins: {legend: {display: false}},
       scales: {
-        x: {ticks: {color: '#888', maxRotation: 0}, grid: {color: '#1e1e30'}},
-        y: {ticks: {color: '#888'}, grid: {color: '#1e1e30'}},
+        x: {ticks: {color: '#A9B4C2', font: {family:'Rajdhani'}, maxRotation: 0}, grid: {color: 'rgba(27,107,133,0.15)'}},
+        y: {ticks: {color: '#A9B4C2', font: {family:'Rajdhani'}}, grid: {color: 'rgba(27,107,133,0.15)'}},
       },
     }
   });
 }
 
+// ── Advanced mode ─────────────────────────────────────────────────────────
+let advancedMode = true;
+
+const PACKS = [
+  {label: '$1',   gems: 120},
+  {label: '$3',   gems: 360},
+  {label: '$5',   gems: 500},
+  {label: '$10',  gems: 900},
+  {label: '$20',  gems: 1700},
+  {label: '$50',  gems: 3500},
+  {label: '$100', gems: 6000},
+];
+
+function toggleAdvancedMode() {
+  advancedMode = !advancedMode;
+  document.getElementById('advToggle').classList.toggle('on', advancedMode);
+  document.getElementById('simpleBudget').style.display = advancedMode ? 'none' : '';
+  document.getElementById('advSections').style.display  = advancedMode ? '' : 'none';
+  if (advancedMode) { buildPacksTable(); updateGems(); }
+}
+
+function buildPacksTable() {
+  const days = parseInt(document.getElementById('days').value) || 1;
+  const head = document.getElementById('packsHead');
+  const body = document.getElementById('packsBody');
+
+  let hRow = '<tr><th>Pack</th><th>💎</th>';
+  for (let d = 1; d <= days; d++) hRow += `<th>D${d}</th>`;
+  head.innerHTML = hRow + '</tr>';
+
+  body.innerHTML = PACKS.map((p, pi) => {
+    let row = `<tr><td>${p.label}</td><td>${p.gems}</td>`;
+    for (let d = 0; d < days; d++) {
+      row += `<td><input type="checkbox" id="pack_${pi}_${d}" onchange="onPackChange(${pi},${d})"></td>`;
+    }
+    return row + '</tr>';
+  }).join('');
+}
+
+function onPackChange(pi, d) {
+  const checked = document.getElementById(`pack_${pi}_${d}`).checked;
+  if (checked) {
+    // also check every cheaper pack in the same day column
+    for (let i = 0; i < pi; i++) {
+      const cb = document.getElementById(`pack_${i}_${d}`);
+      if (cb) cb.checked = true;
+    }
+  } else {
+    // also uncheck every more expensive pack in the same day column
+    for (let i = pi + 1; i < PACKS.length; i++) {
+      const cb = document.getElementById(`pack_${i}_${d}`);
+      if (cb) cb.checked = false;
+    }
+  }
+  updateGems();
+}
+
+function updateGems() {
+  const days = parseInt(document.getElementById('days').value) || 1;
+  const tomeOn = document.getElementById('tomeCb')?.checked ?? false;
+
+  const tomeGems     = tomeOn ? 360 : 0;
+  const missionsGems = tomeOn ? 1680 : 840;
+  const drillGems    = tomeOn ? 600  : 240;
+
+  let packGems = 0;
+  PACKS.forEach((p, pi) => {
+    for (let d = 0; d < days; d++) {
+      if (document.getElementById(`pack_${pi}_${d}`)?.checked) packGems += p.gems;
+    }
+  });
+
+  const total = tomeGems + packGems + missionsGems + drillGems;
+
+  document.getElementById('missionsGems').textContent = missionsGems.toLocaleString();
+  document.getElementById('drillGems').textContent    = drillGems.toLocaleString();
+  document.getElementById('totalGemsDisplay').textContent = total.toLocaleString() + ' gems';
+
+  // feed into the budget field that the simulation reads
+  document.getElementById('budget').value = total;
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  populateTable('red',        DEFAULTS.red,        true);
-  populateTable('yellow',     DEFAULTS.yellow,     true);
-  populateTable('gray',       DEFAULTS.gray,       true);
-  populateTable('milestones', DEFAULTS.milestones, false);
+  populateFixedTable('red',    DEFAULTS.red);
+  populateFixedTable('yellow', DEFAULTS.yellow);
+  populateFixedTable('gray',   DEFAULTS.gray);
+  populateFixedMilestoneTable();
   updateDistStats();
   updateSidebarLabels();
+  document.getElementById('advToggle').classList.add('on');
+  buildPacksTable();
+  updateGems();
 
   ['pRed', 'pYellow', 'days', 'freePerDay'].forEach(id =>
     document.getElementById(id).addEventListener('input', updateSidebarLabels)
   );
+
+  // Rebuild packs table when days changes (advanced mode)
+  document.getElementById('days').addEventListener('input', () => {
+    if (advancedMode) { buildPacksTable(); updateGems(); }
+  });
 });
 </script>
 </body>
