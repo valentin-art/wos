@@ -1,0 +1,524 @@
+[
+  {
+    "level": 1.0,
+    "guide": 5.0,
+    "design": 5.0,
+    "jewelSecrets": null,
+    "powerGain": 205700.0,
+    "stats": 0.09,
+    "svsScore": 625.0
+  },
+  {
+    "level": 2.0,
+    "guide": 40.0,
+    "design": 15.0,
+    "jewelSecrets": null,
+    "powerGain": 82300.0,
+    "stats": 0.12,
+    "svsScore": 1250.0
+  },
+  {
+    "level": 3.0,
+    "guide": 60.0,
+    "design": 40.0,
+    "jewelSecrets": null,
+    "powerGain": 82000.0,
+    "stats": 0.16,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 4.0,
+    "guide": 80.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 82000.0,
+    "stats": 0.19,
+    "svsScore": 8750.0
+  },
+  {
+    "level": 4.1,
+    "guide": 25.0,
+    "design": 50.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.205,
+    "svsScore": 2813.0
+  },
+  {
+    "level": 4.2,
+    "guide": 25.0,
+    "design": 50.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.22,
+    "svsScore": 2813.0
+  },
+  {
+    "level": 4.3,
+    "guide": 25.0,
+    "design": 50.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.235,
+    "svsScore": 2812.0
+  },
+  {
+    "level": 5.0,
+    "guide": 25.0,
+    "design": 50.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.25,
+    "svsScore": 2812.0
+  },
+  {
+    "level": 5.1,
+    "guide": 30.0,
+    "design": 75.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.2625,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 5.2,
+    "guide": 30.0,
+    "design": 75.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.275,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 5.3,
+    "guide": 30.0,
+    "design": 75.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.2875,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 6.0,
+    "guide": 30.0,
+    "design": 75.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.3,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 6.1,
+    "guide": 35.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.3125,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 6.2,
+    "guide": 35.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.325,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 6.3,
+    "guide": 35.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.3375,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 7.0,
+    "guide": 35.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.35,
+    "svsScore": 3125.0
+  },
+  {
+    "level": 7.1,
+    "guide": 50.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.3625,
+    "svsScore": 3250.0
+  },
+  {
+    "level": 7.2,
+    "guide": 50.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.375,
+    "svsScore": 3250.0
+  },
+  {
+    "level": 7.3,
+    "guide": 50.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.3875,
+    "svsScore": 3250.0
+  },
+  {
+    "level": 8.0,
+    "guide": 50.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.4,
+    "svsScore": 3250.0
+  },
+  {
+    "level": 8.1,
+    "guide": 75.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.4125,
+    "svsScore": 3500.0
+  },
+  {
+    "level": 8.2,
+    "guide": 75.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.425,
+    "svsScore": 3500.0
+  },
+  {
+    "level": 8.3,
+    "guide": 75.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.4375,
+    "svsScore": 3500.0
+  },
+  {
+    "level": 9.0,
+    "guide": 75.0,
+    "design": 100.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.45,
+    "svsScore": 3500.0
+  },
+  {
+    "level": 9.1,
+    "guide": 105.0,
+    "design": 105.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.4625,
+    "svsScore": 3750.0
+  },
+  {
+    "level": 9.2,
+    "guide": 105.0,
+    "design": 105.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.475,
+    "svsScore": 3750.0
+  },
+  {
+    "level": 9.3,
+    "guide": 105.0,
+    "design": 105.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.4875,
+    "svsScore": 3750.0
+  },
+  {
+    "level": 10.0,
+    "guide": 105.0,
+    "design": 105.0,
+    "jewelSecrets": null,
+    "powerGain": 31000.0,
+    "stats": 0.5,
+    "svsScore": 3750.0
+  },
+  {
+    "level": 10.1,
+    "guide": 112.0,
+    "design": 84.0,
+    "jewelSecrets": null,
+    "powerGain": 24800.0,
+    "stats": 0.51,
+    "svsScore": 3200.0
+  },
+  {
+    "level": 10.2,
+    "guide": 112.0,
+    "design": 84.0,
+    "jewelSecrets": null,
+    "powerGain": 24800.0,
+    "stats": 0.52,
+    "svsScore": 3200.0
+  },
+  {
+    "level": 10.3,
+    "guide": 112.0,
+    "design": 84.0,
+    "jewelSecrets": null,
+    "powerGain": 24800.0,
+    "stats": 0.53,
+    "svsScore": 3200.0
+  },
+  {
+    "level": 10.4,
+    "guide": 112.0,
+    "design": 84.0,
+    "jewelSecrets": null,
+    "powerGain": 24800.0,
+    "stats": 0.54,
+    "svsScore": 3200.0
+  },
+  {
+    "level": 11.0,
+    "guide": 112.0,
+    "design": 84.0,
+    "jewelSecrets": null,
+    "powerGain": 24800.0,
+    "stats": 0.55,
+    "svsScore": 3200.0
+  },
+  {
+    "level": 11.1,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 3.0,
+    "powerGain": 24800.0,
+    "stats": 0.568,
+    "svsScore": 3400.0
+  },
+  {
+    "level": 11.2,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 3.0,
+    "powerGain": 24800.0,
+    "stats": 0.586,
+    "svsScore": 3400.0
+  },
+  {
+    "level": 11.3,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 3.0,
+    "powerGain": 24800.0,
+    "stats": 0.604,
+    "svsScore": 3400.0
+  },
+  {
+    "level": 11.4,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 3.0,
+    "powerGain": 24800.0,
+    "stats": 0.622,
+    "svsScore": 3400.0
+  },
+  {
+    "level": 12.0,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 3.0,
+    "powerGain": 24800.0,
+    "stats": 0.64,
+    "svsScore": 3400.0
+  },
+  {
+    "level": 12.1,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 6.0,
+    "powerGain": 24800.0,
+    "stats": 0.658,
+    "svsScore": 3600.0
+  },
+  {
+    "level": 12.2,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 6.0,
+    "powerGain": 24800.0,
+    "stats": 0.676,
+    "svsScore": 3600.0
+  },
+  {
+    "level": 12.3,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 6.0,
+    "powerGain": 24800.0,
+    "stats": 0.694,
+    "svsScore": 3600.0
+  },
+  {
+    "level": 12.4,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 6.0,
+    "powerGain": 24800.0,
+    "stats": 0.712,
+    "svsScore": 3600.0
+  },
+  {
+    "level": 13.0,
+    "guide": 116.0,
+    "design": 90.0,
+    "jewelSecrets": 6.0,
+    "powerGain": 24800.0,
+    "stats": 0.73,
+    "svsScore": 3600.0
+  },
+  {
+    "level": 13.1,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 9.0,
+    "powerGain": 24800.0,
+    "stats": 0.748,
+    "svsScore": 3800.0
+  },
+  {
+    "level": 13.2,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 9.0,
+    "powerGain": 24800.0,
+    "stats": 0.766,
+    "svsScore": 3800.0
+  },
+  {
+    "level": 13.3,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 9.0,
+    "powerGain": 24800.0,
+    "stats": 0.784,
+    "svsScore": 3800.0
+  },
+  {
+    "level": 13.4,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 9.0,
+    "powerGain": 24800.0,
+    "stats": 0.802,
+    "svsScore": 3800.0
+  },
+  {
+    "level": 14.0,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 9.0,
+    "powerGain": 24800.0,
+    "stats": 0.82,
+    "svsScore": 3800.0
+  },
+  {
+    "level": 14.1,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 14.0,
+    "powerGain": 24800.0,
+    "stats": 0.838,
+    "svsScore": 4000.0
+  },
+  {
+    "level": 14.2,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 14.0,
+    "powerGain": 24800.0,
+    "stats": 0.856,
+    "svsScore": 4000.0
+  },
+  {
+    "level": 14.3,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 14.0,
+    "powerGain": 24800.0,
+    "stats": 0.874,
+    "svsScore": 4000.0
+  },
+  {
+    "level": 14.4,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 14.0,
+    "powerGain": 24800.0,
+    "stats": 0.892,
+    "svsScore": 4000.0
+  },
+  {
+    "level": 15.0,
+    "guide": 120.0,
+    "design": 100.0,
+    "jewelSecrets": 14.0,
+    "powerGain": 24800.0,
+    "stats": 0.91,
+    "svsScore": 4000.0
+  },
+  {
+    "level": 15.1,
+    "guide": 130.0,
+    "design": 110.0,
+    "jewelSecrets": 20.0,
+    "powerGain": 24800.0,
+    "stats": 0.928,
+    "svsScore": 4200.0
+  },
+  {
+    "level": 15.2,
+    "guide": 130.0,
+    "design": 110.0,
+    "jewelSecrets": 20.0,
+    "powerGain": 24800.0,
+    "stats": 0.946,
+    "svsScore": 4200.0
+  },
+  {
+    "level": 15.3,
+    "guide": 130.0,
+    "design": 110.0,
+    "jewelSecrets": 20.0,
+    "powerGain": 24800.0,
+    "stats": 0.964,
+    "svsScore": 4200.0
+  },
+  {
+    "level": 15.4,
+    "guide": 130.0,
+    "design": 110.0,
+    "jewelSecrets": 20.0,
+    "powerGain": 24800.0,
+    "stats": 0.982,
+    "svsScore": 4200.0
+  },
+  {
+    "level": 16.0,
+    "guide": 130.0,
+    "design": 110.0,
+    "jewelSecrets": 20.0,
+    "powerGain": 24800.0,
+    "stats": 1.0,
+    "svsScore": 4200.0
+  }
+]

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charm Optimizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div id="nav-root"></div>
+<script type="module" src="/js/nav.js"></script>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-heading">💎 Parameters</div>
+
+    <details class="sidebar-section" open>
+      <summary>Resources</summary>
+      <div class="inner">
+        <div>
+          <label>Guide</label>
+          <input type="number" id="res_Guide" min="0" step="10">
+        </div>
+        <div>
+          <label>Design</label>
+          <input type="number" id="res_Design" min="0" step="10">
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Jacket</summary>
+      <div class="inner">
+        <div class="select-row">
+          <select id="level_Jacket_0"></select>
+          <select id="level_Jacket_1"></select>
+          <select id="level_Jacket_2"></select>
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Pants</summary>
+      <div class="inner">
+        <div class="select-row">
+          <select id="level_Pants_0"></select>
+          <select id="level_Pants_1"></select>
+          <select id="level_Pants_2"></select>
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Ring</summary>
+      <div class="inner">
+        <div class="select-row">
+          <select id="level_Ring_0"></select>
+          <select id="level_Ring_1"></select>
+          <select id="level_Ring_2"></select>
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Cane</summary>
+      <div class="inner">
+        <div class="select-row">
+          <select id="level_Cane_0"></select>
+          <select id="level_Cane_1"></select>
+          <select id="level_Cane_2"></select>
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Helmet</summary>
+      <div class="inner">
+        <div class="select-row">
+          <select id="level_Helmet_0"></select>
+          <select id="level_Helmet_1"></select>
+          <select id="level_Helmet_2"></select>
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Watch</summary>
+      <div class="inner">
+        <div class="select-row">
+          <select id="level_Watch_0"></select>
+          <select id="level_Watch_1"></select>
+          <select id="level_Watch_2"></select>
+        </div>
+      </div>
+    </details>
+  </aside>
+
+  <main class="main">
+    <h1>💎 Charm <span>Optimizer</span></h1>
+    <p class="caption">3 independent charms per equipment type. Enter your resources and current levels, then calculate the upgrade plan that maximizes the SvS score within your budget.</p>
+
+    <button class="btn-primary" id="calcBtn" onclick="calculateUpgrades()">▶ Calculate upgrades</button>
+
+    <div id="results"></div>
+  </main>
+</div>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>
