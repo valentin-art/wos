@@ -1,0 +1,380 @@
+[
+  {
+    "tier": "Green 0",
+    "alloy": 1500.0,
+    "polish": 15.0,
+    "plans": null,
+    "amber": null,
+    "power": 224400,
+    "svsScore": 1125
+  },
+  {
+    "tier": "Green 1",
+    "alloy": 3800.0,
+    "polish": 40.0,
+    "plans": null,
+    "amber": null,
+    "power": 306000,
+    "svsScore": 1875
+  },
+  {
+    "tier": "Blue 0",
+    "alloy": 7000.0,
+    "polish": 70.0,
+    "plans": null,
+    "amber": null,
+    "power": 408000,
+    "svsScore": 3000
+  },
+  {
+    "tier": "Blue 1",
+    "alloy": 9700.0,
+    "polish": 95.0,
+    "plans": null,
+    "amber": null,
+    "power": 510000,
+    "svsScore": 4500
+  },
+  {
+    "tier": "Blue 2",
+    "alloy": null,
+    "polish": null,
+    "plans": 45.0,
+    "amber": null,
+    "power": 612000,
+    "svsScore": 5100
+  },
+  {
+    "tier": "Blue 3",
+    "alloy": null,
+    "polish": null,
+    "plans": 50.0,
+    "amber": null,
+    "power": 714000,
+    "svsScore": 5440
+  },
+  {
+    "tier": "Purple 0",
+    "alloy": null,
+    "polish": null,
+    "plans": 60.0,
+    "amber": null,
+    "power": 816000,
+    "svsScore": 3230
+  },
+  {
+    "tier": "Purple 1",
+    "alloy": null,
+    "polish": null,
+    "plans": 70.0,
+    "amber": null,
+    "power": 885360,
+    "svsScore": 3230
+  },
+  {
+    "tier": "Purple 2",
+    "alloy": 6500.0,
+    "polish": 65.0,
+    "plans": 40.0,
+    "amber": null,
+    "power": 954720,
+    "svsScore": 3225
+  },
+  {
+    "tier": "Purple 3",
+    "alloy": 8000.0,
+    "polish": 80.0,
+    "plans": 50.0,
+    "amber": null,
+    "power": 1024080,
+    "svsScore": 3225
+  },
+  {
+    "tier": "Purple T1 0",
+    "alloy": 10000.0,
+    "polish": 95.0,
+    "plans": 60.0,
+    "amber": null,
+    "power": 1093440,
+    "svsScore": 3440
+  },
+  {
+    "tier": "Purple T1 1",
+    "alloy": 11000.0,
+    "polish": 110.0,
+    "plans": 70.0,
+    "amber": null,
+    "power": 1162800,
+    "svsScore": 3440
+  },
+  {
+    "tier": "Purple T1 2",
+    "alloy": 13000.0,
+    "polish": 130.0,
+    "plans": 85.0,
+    "amber": null,
+    "power": 1232160,
+    "svsScore": 4085
+  },
+  {
+    "tier": "Purple T1 3",
+    "alloy": 15000.0,
+    "polish": 160.0,
+    "plans": 100.0,
+    "amber": null,
+    "power": 1301520,
+    "svsScore": 4085
+  },
+  {
+    "tier": "Gold 0",
+    "alloy": 22000.0,
+    "polish": 220.0,
+    "plans": 40.0,
+    "amber": null,
+    "power": 1362720,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold 1",
+    "alloy": 23000.0,
+    "polish": 230.0,
+    "plans": 40.0,
+    "amber": null,
+    "power": 1423920,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold 2",
+    "alloy": 25000.0,
+    "polish": 250.0,
+    "plans": 45.0,
+    "amber": null,
+    "power": 1485120,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold 3",
+    "alloy": 26000.0,
+    "polish": 260.0,
+    "plans": 45.0,
+    "amber": null,
+    "power": 1546320,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold T1 0",
+    "alloy": 28000.0,
+    "polish": 280.0,
+    "plans": 45.0,
+    "amber": null,
+    "power": 1607520,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold T1 1",
+    "alloy": 30000.0,
+    "polish": 300.0,
+    "plans": 55.0,
+    "amber": null,
+    "power": 1668720,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold T1 2",
+    "alloy": 32000.0,
+    "polish": 320.0,
+    "plans": 55.0,
+    "amber": null,
+    "power": 1729920,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold T1 3",
+    "alloy": 35000.0,
+    "polish": 340.0,
+    "plans": 55.0,
+    "amber": null,
+    "power": 1791120,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold T2 0",
+    "alloy": 38000.0,
+    "polish": 390.0,
+    "plans": 55.0,
+    "amber": null,
+    "power": 1852320,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold T2 1",
+    "alloy": 43000.0,
+    "polish": 430.0,
+    "plans": 75.0,
+    "amber": null,
+    "power": 1913520,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold T2 2",
+    "alloy": 45000.0,
+    "polish": 460.0,
+    "plans": 80.0,
+    "amber": null,
+    "power": 1974720,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Gold T2 3",
+    "alloy": 48000.0,
+    "polish": 500.0,
+    "plans": 85.0,
+    "amber": null,
+    "power": 2040000,
+    "svsScore": 6250
+  },
+  {
+    "tier": "Pink 0",
+    "alloy": 50000.0,
+    "polish": 530.0,
+    "plans": 85.0,
+    "amber": 10.0,
+    "power": 2142000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink 1",
+    "alloy": 52000.0,
+    "polish": 560.0,
+    "plans": 90.0,
+    "amber": 10.0,
+    "power": 2244000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink 2",
+    "alloy": 54000.0,
+    "polish": 590.0,
+    "plans": 95.0,
+    "amber": 10.0,
+    "power": 2346000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink 3",
+    "alloy": 56000.0,
+    "polish": 620.0,
+    "plans": 100.0,
+    "amber": 10.0,
+    "power": 2448000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T1 0",
+    "alloy": 59000.0,
+    "polish": 670.0,
+    "plans": 110.0,
+    "amber": 15.0,
+    "power": 2550000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T1 1",
+    "alloy": 61000.0,
+    "polish": 700.0,
+    "plans": 115.0,
+    "amber": 15.0,
+    "power": 2652000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T1 2",
+    "alloy": 63000.0,
+    "polish": 730.0,
+    "plans": 120.0,
+    "amber": 15.0,
+    "power": 2754000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T1 3",
+    "alloy": 65000.0,
+    "polish": 760.0,
+    "plans": 125.0,
+    "amber": 15.0,
+    "power": 2856000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T2 0",
+    "alloy": 68000.0,
+    "polish": 810.0,
+    "plans": 135.0,
+    "amber": 20.0,
+    "power": 2958000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T2 1",
+    "alloy": 70000.0,
+    "polish": 840.0,
+    "plans": 140.0,
+    "amber": 20.0,
+    "power": 3060000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T2 2",
+    "alloy": 72000.0,
+    "polish": 870.0,
+    "plans": 145.0,
+    "amber": 20.0,
+    "power": 3162000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T2 3",
+    "alloy": 74000.0,
+    "polish": 900.0,
+    "plans": 150.0,
+    "amber": 20.0,
+    "power": 3264000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T3 0",
+    "alloy": 77000.0,
+    "polish": 950.0,
+    "plans": 160.0,
+    "amber": 25.0,
+    "power": 3366000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T3 1",
+    "alloy": 80000.0,
+    "polish": 990.0,
+    "plans": 165.0,
+    "amber": 25.0,
+    "power": 3468000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T3 2",
+    "alloy": 83000.0,
+    "polish": 1030.0,
+    "plans": 170.0,
+    "amber": 25.0,
+    "power": 3570000,
+    "svsScore": 2390
+  },
+  {
+    "tier": "Pink T3 4",
+    "alloy": 86000.0,
+    "polish": 1070.0,
+    "plans": 180.0,
+    "amber": 25.0,
+    "power": 3672000,
+    "svsScore": 2390
+  }
+]

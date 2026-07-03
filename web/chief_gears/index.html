@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chief Gear Optimizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div id="nav-root"></div>
+<script type="module" src="/js/nav.js"></script>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-heading">⚙ Parameters</div>
+
+    <details class="sidebar-section" open>
+      <summary>Resources</summary>
+      <div class="inner">
+        <div>
+          <label>Alloy</label>
+          <input type="number" id="res_Alloy" min="0" step="1000">
+        </div>
+        <div>
+          <label>Polish</label>
+          <input type="number" id="res_Polish" min="0" step="10">
+        </div>
+        <div>
+          <label>Plans</label>
+          <input type="number" id="res_Plans" min="0" step="10">
+        </div>
+        <div>
+          <label>Amber</label>
+          <input type="number" id="res_Amber" min="0" step="10">
+        </div>
+      </div>
+    </details>
+
+    <details class="sidebar-section" open>
+      <summary>Current tiers</summary>
+      <div class="inner">
+        <div>
+          <label>Jacket</label>
+          <select id="tier_Jacket"></select>
+        </div>
+        <div>
+          <label>Pants</label>
+          <select id="tier_Pants"></select>
+        </div>
+        <div>
+          <label>Ring</label>
+          <select id="tier_Ring"></select>
+        </div>
+        <div>
+          <label>Cane</label>
+          <select id="tier_Cane"></select>
+        </div>
+        <div>
+          <label>Helmet</label>
+          <select id="tier_Helmet"></select>
+        </div>
+        <div>
+          <label>Watch</label>
+          <select id="tier_Watch"></select>
+        </div>
+      </div>
+    </details>
+  </aside>
+
+  <main class="main">
+    <h1>⚙ Chief Gear <span>Optimizer</span></h1>
+    <p class="caption">Enter your resources and current tiers, then calculate the upgrade plan that maximizes the SvS score within your budget.</p>
+
+    <button class="btn-primary" id="calcBtn" onclick="calculateUpgrades()">▶ Calculate upgrades</button>
+
+    <div id="results"></div>
+  </main>
+</div>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>
