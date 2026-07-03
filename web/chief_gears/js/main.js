@@ -1,4 +1,4 @@
-import { GEAR_NAMES, RESOURCE_KEYS, DEFAULT_RESOURCES } from './constants.js';
+import { GEAR_NAMES, DISPLAY_ORDER, RESOURCE_KEYS, DEFAULT_RESOURCES } from './constants.js';
 import { upgradeChiefGears } from './optimizer.js';
 
 let gearRows = [];
@@ -35,12 +35,26 @@ function readGearSpecs() {
 function renderResults({ upgradeTable, cost, remaining, score }, resources) {
   const el = document.getElementById('results');
 
-  const upgradeRows = upgradeTable.map(row => `
+  const byName = Object.fromEntries(upgradeTable.map(row => [row.gear, row]));
+  const pairs = [];
+  for (let i = 0; i < DISPLAY_ORDER.length; i += 2) {
+    pairs.push([DISPLAY_ORDER[i], DISPLAY_ORDER[i + 1]]);
+  }
+
+  const upgradeRows = pairs.map(([leftName, rightName]) => {
+    const left = byName[leftName];
+    const right = byName[rightName];
+    return `
     <tr>
-      <td>${row.gear}</td>
-      <td>${row.oldTier}</td>
-      <td>${row.newTier}</td>
-    </tr>`).join('');
+      <td class="gear-name">${leftName}</td>
+      <td>${left.oldTier}</td>
+      <td><strong>${left.newTier}</strong></td>
+      <td class="col-gap"></td>
+      <td class="gear-name">${rightName}</td>
+      <td>${right.oldTier}</td>
+      <td><strong>${right.newTier}</strong></td>
+    </tr>`;
+  }).join('');
 
   const resourceRows = RESOURCE_KEYS.map(key => `
     <tr>
@@ -60,8 +74,14 @@ function renderResults({ upgradeTable, cost, remaining, score }, resources) {
 
     <h2>Upgrades</h2>
     <div class="results-table-wrap">
-      <table class="results-table">
-        <thead><tr><th>Gear</th><th>Old tier</th><th>New tier</th></tr></thead>
+      <table class="results-table upgrade-pair-table">
+        <thead>
+          <tr>
+            <th></th><th>Old Tier</th><th>New Tier</th>
+            <th class="col-gap"></th>
+            <th></th><th>Old Tier</th><th>New Tier</th>
+          </tr>
+        </thead>
         <tbody>${upgradeRows}</tbody>
       </table>
     </div>

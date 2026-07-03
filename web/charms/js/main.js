@@ -1,4 +1,4 @@
-import { GEAR_NAMES, N_CHARMS, CHARM_RESOURCE_KEYS, DEFAULT_RESOURCES, DEFAULT_LEVEL } from './constants.js';
+import { GEAR_NAMES, DISPLAY_ORDER, N_CHARMS, CHARM_RESOURCE_KEYS, DEFAULT_RESOURCES, DEFAULT_LEVEL } from './constants.js';
 import { upgradeCharms } from './optimizer.js';
 
 let charmRows = [];
@@ -38,15 +38,25 @@ function readCharmSpecs() {
   }));
 }
 
+function renderTiersGrid(byName, field) {
+  const isNew = field === 'newLevels';
+  return DISPLAY_ORDER.map(name => {
+    const row = byName[name];
+    const cells = row[field]
+      .map(v => `<td>${isNew ? `<strong>${v}</strong>` : v}</td>`)
+      .join('');
+    return `
+    <div class="type-cell">
+      <div class="gear-name">${name}</div>
+      <table class="mini-table"><tr>${cells}</tr></table>
+    </div>`;
+  }).join('');
+}
+
 function renderResults({ upgradeTable, cost, remaining, score }, resources) {
   const el = document.getElementById('results');
 
-  const upgradeRows = upgradeTable.map(row => `
-    <tr>
-      <td>${row.charm}</td>
-      <td>${row.oldLevels.join(', ')}</td>
-      <td>${row.newLevels.join(', ')}</td>
-    </tr>`).join('');
+  const byName = Object.fromEntries(upgradeTable.map(row => [row.charm, row]));
 
   const resourceRows = CHARM_RESOURCE_KEYS.map(key => `
     <tr>
@@ -65,11 +75,15 @@ function renderResults({ upgradeTable, cost, remaining, score }, resources) {
     </div>
 
     <h2>Upgrades</h2>
-    <div class="results-table-wrap">
-      <table class="results-table">
-        <thead><tr><th>Type</th><th>Old levels</th><th>New levels</th></tr></thead>
-        <tbody>${upgradeRows}</tbody>
-      </table>
+    <div class="old-new-wrap">
+      <div class="tiers-block">
+        <div class="tiers-block-title">Old tiers</div>
+        <div class="type-grid">${renderTiersGrid(byName, 'oldLevels')}</div>
+      </div>
+      <div class="tiers-block">
+        <div class="tiers-block-title">New tiers</div>
+        <div class="type-grid">${renderTiersGrid(byName, 'newLevels')}</div>
+      </div>
     </div>
 
     <h2>Used / rest resources</h2>

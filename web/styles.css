@@ -42,7 +42,8 @@
   .nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 32px;
     padding: 16px 28px;
     border-bottom: 1px solid var(--border);
     background: var(--bg);
@@ -146,6 +147,75 @@
   .select-row { display: flex; gap: 6px; }
   .select-row select { flex: 1; min-width: 0; }
 
+  /* ── Tier grid (2 columns) ── */
+  .tier-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    max-width: 480px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 480px) {
+    .tier-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Upgrade pair table (two gear/tier blocks side by side) ── */
+  .gear-name { color: var(--accent); font-weight: 700; }
+  .upgrade-pair-table .col-gap {
+    width: 28px;
+    border: none;
+    background: transparent;
+  }
+
+  /* ── Type grid (2 columns, one card per equipment type) ── */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .type-cell {
+    background: var(--surface);
+    border: 1px solid var(--border-d);
+    padding: 12px 14px;
+  }
+  .type-cell label { margin-bottom: 8px; }
+
+  /* ── Mini table (per-cell charm levels, 1 row x 3 columns) ── */
+  .mini-table {
+    width: calc(100% - 10px);
+    margin-top: 8px;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+  }
+  .mini-table td {
+    border: 1px solid var(--border);
+    padding: 5px 6px;
+    text-align: center;
+    background: var(--surface2);
+    font-size: 13px; font-weight: 500;
+    color: var(--text);
+  }
+  @media (max-width: 480px) {
+    .type-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Old / new tiers side by side ── */
+  .old-new-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) {
+    .old-new-wrap { grid-template-columns: 1fr; }
+  }
+  .tiers-block-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 10px;
+  }
+
   /* ── Form controls ── */
   label {
     font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
@@ -179,10 +249,18 @@
     font-size: 14px; font-weight: 500;
     outline: none;
     transition: border-color .15s, background .15s;
+    color-scheme: dark;
   }
   select:focus {
     border-color: var(--accent);
     background: rgba(39,211,255,0.07);
+  }
+  /* The dropdown popup is a native surface that ignores a translucent
+     select background, so it needs an explicit opaque color to match the
+     page theme instead of defaulting to white. */
+  select option {
+    background-color: var(--surface);
+    color: var(--text);
   }
 
   .info-badge {

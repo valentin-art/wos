@@ -41,40 +41,39 @@
       </div>
     </details>
 
-    <details class="sidebar-section" open>
-      <summary>Current tiers</summary>
-      <div class="inner">
-        <div>
-          <label>Jacket</label>
-          <select id="tier_Jacket"></select>
-        </div>
-        <div>
-          <label>Pants</label>
-          <select id="tier_Pants"></select>
-        </div>
-        <div>
-          <label>Ring</label>
-          <select id="tier_Ring"></select>
-        </div>
-        <div>
-          <label>Cane</label>
-          <select id="tier_Cane"></select>
-        </div>
-        <div>
-          <label>Helmet</label>
-          <select id="tier_Helmet"></select>
-        </div>
-        <div>
-          <label>Watch</label>
-          <select id="tier_Watch"></select>
-        </div>
-      </div>
-    </details>
   </aside>
 
   <main class="main">
     <h1>⚙ Chief Gear <span>Optimizer</span></h1>
     <p class="caption">Enter your resources and current tiers, then calculate the upgrade plan that maximizes the SvS score within your budget.</p>
+
+    <h2>Current tiers</h2>
+    <div class="tier-grid">
+      <div>
+        <label>Helmet</label>
+        <select id="tier_Helmet"></select>
+      </div>
+      <div>
+        <label>Watch</label>
+        <select id="tier_Watch"></select>
+      </div>
+      <div>
+        <label>Jacket</label>
+        <select id="tier_Jacket"></select>
+      </div>
+      <div>
+        <label>Pants</label>
+        <select id="tier_Pants"></select>
+      </div>
+      <div>
+        <label>Ring</label>
+        <select id="tier_Ring"></select>
+      </div>
+      <div>
+        <label>Cane</label>
+        <select id="tier_Cane"></select>
+      </div>
+    </div>
 
     <button class="btn-primary" id="calcBtn" onclick="calculateUpgrades()">▶ Calculate upgrades</button>
 
