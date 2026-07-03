@@ -98,7 +98,7 @@ async function calculateUpgrades() {
 window.calculateUpgrades = calculateUpgrades;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const res = await fetch('/charms/data/charms.json');
+  const res = await fetch('/charms/svs_map/charms.json');
   charmRows = await res.json();
   populateLevelSelects();
   populateResourceInputs();

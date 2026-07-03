@@ -92,7 +92,7 @@ async function calculateUpgrades() {
 window.calculateUpgrades = calculateUpgrades;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const res = await fetch('/chief_gears/data/gears.json');
+  const res = await fetch('/chief_gears/svs_map/gears.json');
   gearRows = await res.json();
   populateTierSelects();
   populateResourceInputs();
