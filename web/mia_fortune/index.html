@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Prize Farming Optimizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div id="nav-root"></div>
+<script type="module" src="/js/nav.js"></script>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-heading">⚙ Parameters</div>
+
+    <label class="tome-row">
+      <input type="checkbox" id="unifiedWeights" checked onchange="toggleUnifiedWeights()">
+      <span class="tome-main">Uniform weights (10% each)</span>
+    </label>
+
+    <details class="sidebar-section">
+      <summary>Reward pools</summary>
+      <div class="inner">
+        <table class="editable-table" id="table-pools">
+          <thead><tr><th>Pool</th><th>Items</th><th>Prob / item (%)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><input type="text" id="name_pool1" value="Pool 1"></td><td>3</td>
+              <td><input type="number" id="prob_pool1" value="19.95" min="0" max="100" step="0.01"></td>
+            </tr>
+            <tr>
+              <td><input type="text" id="name_pool2" value="Pool 2"></td><td>2</td>
+              <td><input type="number" id="prob_pool2" value="7.67" min="0" max="100" step="0.01"></td>
+            </tr>
+            <tr>
+              <td><input type="text" id="name_pool3" value="Pool 3"></td><td>1</td>
+              <td><input type="number" id="prob_pool3" value="7.67" min="0" max="100" step="0.01"></td>
+            </tr>
+            <tr>
+              <td><input type="text" id="name_pool4" value="Pool 4"></td><td>1</td>
+              <td><input type="number" id="prob_pool4" value="9.21" min="0" max="100" step="0.01"></td>
+            </tr>
+            <tr>
+              <td><input type="text" id="name_pool5" value="Pool 5"></td><td>1</td>
+              <td><input type="number" id="prob_pool5" value="3.07" min="0" max="100" step="0.01"></td>
+            </tr>
+            <tr>
+              <td><input type="text" id="name_pool6" value="Pool 6"></td><td>1</td>
+              <td><input type="number" id="prob_pool6" value="3.07" min="0" max="100" step="0.01"></td>
+            </tr>
+            <tr class="grand-prize-row">
+              <td><input type="text" id="name_grandPrize" value="Grand Prize"></td><td>1</td>
+              <td><input type="number" id="prob_grandPrize" value="1.79" min="0" max="100" step="0.01"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <!-- Advanced mode toggle -->
+    <div class="adv-toggle-wrap" onclick="toggleAdvancedMode()">
+      <span class="adv-toggle-label">Advanced mode</span>
+      <div class="toggle-sw" id="advToggle"></div>
+    </div>
+
+    <!-- Simple mode: manual budget -->
+    <div id="simpleBudget" style="display:none">
+      <details class="sidebar-section" open>
+        <summary>Budget</summary>
+        <div class="inner">
+          <div>
+            <label>Total budget (tokens)</label>
+            <input type="number" id="budget" value="50" min="10" max="1000">
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Advanced mode sections -->
+    <div id="advSections">
+
+      <details class="sidebar-section" open>
+        <summary>Packs</summary>
+        <div class="inner">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px">Daily packs — check if purchased (independent, any combination)</div>
+          <div class="packs-wrap">
+            <table class="packs-table">
+              <thead id="packsHead"></thead>
+              <tbody id="packsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <details class="sidebar-section" open>
+        <summary>Daily missions</summary>
+        <div class="inner">
+          <div class="caption">Considered completed each day</div>
+          <div class="gem-row">
+            <span class="gem-row-label">Total</span>
+            <span class="gem-row-value" id="missionsTickets">44</span>
+          </div>
+        </div>
+      </details>
+
+      <details class="sidebar-section" open>
+        <summary>Free daily tickets</summary>
+        <div class="inner">
+          <div class="gem-row">
+            <span class="gem-row-label">Total</span>
+            <span class="gem-row-value" id="freeTickets">2</span>
+          </div>
+        </div>
+      </details>
+
+      <details class="sidebar-section" open>
+        <summary>Total tickets</summary>
+        <div class="inner">
+          <div class="total-gems-box">
+            <div class="total-gems-label">Budget for simulation</div>
+            <div class="total-gems-value" id="totalTicketsDisplay">—</div>
+          </div>
+        </div>
+      </details>
+
+    </div><!-- /advSections -->
+
+    <details class="sidebar-section" open>
+      <summary>Simulation</summary>
+      <div class="inner">
+        <div>
+          <label>Simulations</label>
+          <input type="number" id="simulations" value="25000" min="5000" max="100000">
+        </div>
+        <div>
+          <label>Random seed (0 = random)</label>
+          <input type="number" id="seed" value="0" min="0" step="1">
+        </div>
+        <div>
+          <label>Grand prize threshold</label>
+          <input type="number" id="prizeThreshold" value="1" min="0" step="1">
+        </div>
+      </div>
+    </details>
+
+  </aside>
+
+  <main class="main">
+    <h1>🏆 Grand Prize <span>Farming Optimizer</span></h1>
+    <p class="caption">Monte Carlo search over reset strategies — finds how many rounds to push before resetting for the best expected Grand Prizes per token budget.</p>
+
+    <details class="expander">
+      <summary>ℹ️ Simulation logic</summary>
+      <div class="expander-body">
+        <p><strong>Draw mechanic</strong> — each round samples one item, weighted by that item's probability among everything still on the board (weighted sampling <em>without</em> replacement). Drawing the Grand Prize ends the run with a free reset. Pool probabilities are editable in the sidebar.</p>
+        <p><strong>Costs</strong> — playing rounds 1‑10 costs 1, 2, 3, 4, 6, 8, 12, 15, 20, 25 tokens respectively (cumulative 75 to clear a full board). Resetting without the Grand Prize costs 15 down to 1 tokens depending on how far you got — the deeper you push, the cheaper the reset.</p>
+        <p><strong>Strategy sweep</strong> — for each candidate "reset after N rounds" strategy, the optimizer runs many simulated sessions under the token budget and reports the average Grand Prizes earned, tokens spent, and efficiency (prizes per token).</p>
+        <p><strong>Ticket budget</strong> — in advanced mode, the token budget is auto-computed from daily missions (44 fixed, 22/day over the 2-day event), free daily tickets (2 fixed), and any purchased packs (5 tiers × 2 days, toggled independently, no bundling requirement). In simple mode you can enter the budget manually instead.</p>
+        <p><strong>Milestone tickets</strong> — as a simulated playthrough's cumulative wishes (orbs opened, persisting across board resets) cross 20 and 100, the corresponding ticket reward (+5, +12) is added directly to that playthrough's remaining budget, extending how much further it can play. The 250/750-wish rewards are informational only (Fire Crystal chests / Fire Crystals) and do not add tickets.</p>
+      </div>
+    </details>
+
+    <h2>Milestone rewards</h2>
+    <p class="caption">Cumulative rewards earned when total wishes (orbs opened) reach each threshold. Ticket rewards are added directly to the simulated budget mid-run.</p>
+    <div class="section-card milestones-wrap">
+      <table class="editable-table" id="table-milestones">
+        <thead><tr><th>Progress (wishes)</th><th>Progress Rewards</th><th>Tickets granted (used in sim)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <button class="btn-primary" id="runAnalysis" onclick="runFarmingAnalysis()">▶ Optimize grand prize farming</button>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-label" id="progressLabel">Running…</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    </div>
+
+    <div id="results"></div>
+  </main>
+</div>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>

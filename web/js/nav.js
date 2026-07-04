@@ -2,6 +2,7 @@ const PAGES = [
   { path: '/', label: 'FROSTY FORTUNE' },
   { path: '/chief_gears/', label: 'CHIEF GEARS' },
   { path: '/charms/', label: 'CHARMS' },
+  { path: '/mia_fortune/', label: 'MIA FORTUNE' },
 ];
 
 function normalizePath(pathname) {

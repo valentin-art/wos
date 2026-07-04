@@ -358,6 +358,10 @@
     background: var(--accent-d);
     border-color: var(--border);
   }
+  .editable-table td input:disabled {
+    color: var(--muted);
+    cursor: not-allowed;
+  }
   .editable-table td.del-col { width: 26px; text-align: center; }
   #table-milestones th { text-align: center; }
   #table-milestones td { text-align: center; }
@@ -369,6 +373,13 @@
     font-size: 15px; line-height: 1; padding: 0 4px;
   }
   .del-row-btn:hover { color: var(--red); }
+
+  /* ── Reward pools table (mia_fortune) ── */
+  #table-pools td:first-child { color: var(--text); }
+  #table-pools .grand-prize-row td:first-child,
+  #table-pools .grand-prize-row td:first-child input {
+    color: var(--accent); font-weight: 700;
+  }
 
   .dist-stats { display: flex; gap: 8px; margin-top: 10px; }
   .dist-stat {
@@ -417,6 +428,19 @@
   }
   .winner-sub { color: var(--muted); font-size: 13px; letter-spacing: 0.06em; }
 
+  /* ── Winner card: two-up split (e.g. expected value vs. probability) ── */
+  .winner-split { display: flex; gap: 24px; justify-content: center; margin: 14px 0 4px; }
+  .winner-split-item { flex: 1; max-width: 220px; }
+  .winner-split-label {
+    color: var(--muted); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .winner-split-value {
+    font-size: 40px; font-weight: 700; letter-spacing: 0.04em;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(39,211,255,0.4);
+  }
+
   /* ── Comparison table ── */
   .results-table-wrap { overflow-x: auto; }
   .results-table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 13px; }
@@ -429,6 +453,9 @@
   .results-table td { padding: 10px 14px; border-bottom: 1px solid var(--border-d); }
   .results-table tr.winner-row td {
     background: rgba(39,211,255,0.06); color: var(--accent); font-weight: 700;
+  }
+  .results-table tr.impossible-row td {
+    color: var(--muted); font-style: italic;
   }
   .results-table tr:last-child td { border-bottom: none; }
 
