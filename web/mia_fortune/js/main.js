@@ -36,9 +36,21 @@ function toggleUnifiedWeights() {
       input.value = 10;
       input.disabled = true;
     } else {
+      input.value = p.itemProb;
       input.disabled = false;
     }
   });
+}
+
+let isRunning = false;
+let stopRequested = false;
+
+function handleRunButtonClick() {
+  if (isRunning) {
+    stopRequested = true;
+  } else {
+    runFarmingAnalysis();
+  }
 }
 
 async function runFarmingAnalysis() {
@@ -50,13 +62,17 @@ async function runFarmingAnalysis() {
   const pools = readPools();
 
   const runBtn = document.getElementById('runAnalysis');
-  runBtn.disabled = true;
+  isRunning = true;
+  stopRequested = false;
+  runBtn.textContent = '■ Stop simulations';
 
   const results = [];
 
   for (let round = 1; round <= 10; round++) {
+    if (stopRequested) break;
     setProgress(round - 1, 10, `Testing reset at round ${round}/10…`);
     await new Promise(resolve => setTimeout(resolve, 0));
+    if (stopRequested) break;
 
     const cumulativeCost = getCumulativeCost(round);
     if (budget < cumulativeCost) {
@@ -75,10 +91,20 @@ async function runFarmingAnalysis() {
       results.push(simulateFarmingStrategy(pools, round, budget, numSims, makePRNG(seed), MILESTONES, prizeThreshold));
     }
   }
-  setProgress(10, 10, 'Done');
 
-  renderResults(results, budget, prizeThreshold);
-  runBtn.disabled = false;
+  if (stopRequested) {
+    document.getElementById('progressWrap').classList.remove('visible');
+  } else {
+    setProgress(10, 10, 'Done');
+  }
+
+  if (results.length > 0) {
+    renderResults(results, budget, prizeThreshold);
+  }
+
+  isRunning = false;
+  stopRequested = false;
+  runBtn.textContent = '▶ Optimize grand prize farming';
 }
 
 function renderResults(results, budget, prizeThreshold) {
@@ -187,7 +213,7 @@ function drawChart(results, best) {
   });
 }
 
-window.runFarmingAnalysis = runFarmingAnalysis;
+window.handleRunButtonClick = handleRunButtonClick;
 window.toggleAdvancedMode = toggleAdvancedMode;
 window.onPackChange = onPackChange;
 window.updateTicketTotal = updateTicketTotal;

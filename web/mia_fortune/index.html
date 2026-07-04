@@ -137,7 +137,7 @@
       <div class="inner">
         <div>
           <label>Simulations</label>
-          <input type="number" id="simulations" value="25000" min="5000" max="100000">
+          <input type="number" id="simulations" value="5000" min="5000" max="100000">
         </div>
         <div>
           <label>Random seed (0 = random)</label>
@@ -176,7 +176,7 @@
       </table>
     </div>
 
-    <button class="btn-primary" id="runAnalysis" onclick="runFarmingAnalysis()">▶ Optimize grand prize farming</button>
+    <button class="btn-primary" id="runAnalysis" onclick="handleRunButtonClick()">▶ Optimize grand prize farming</button>
 
     <div class="progress-wrap" id="progressWrap">
       <div class="progress-label" id="progressLabel">Running…</div>
